@@ -1,33 +1,29 @@
 {
     "private": true,
     "sideEffects": false,
+    "type": "module",
     "scripts": {
-        "build": "remix build",
-        "dev": "remix dev",
+        "dev": "vite",
+        "build": "vite build",
+        "preview": "vite preview",
         "typecheck": "tsc"
     },
     "dependencies": {
-        "@remix-run/node": "^1.17.0",
-        "@remix-run/react": "^1.17.0",
-        "@remix-run/vercel": "^1.17.0",
         "@turf/bbox": "^6.5.0",
-        "@vercel/node": "^2.9.0",
-        "front-matter": "^4.0.2",
-        "mapbox-gl": "^2.13.0",
-        "mdx-bundler": "^9.2.1",
+        "mapbox-gl": "^3.18.0",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
-        "react-map-gl": "^7.0.21",
+        "react-map-gl": "^8.1.0",
         "react-use": "^17.4.0"
     },
     "devDependencies": {
-        "@remix-run/dev": "^1.14.0",
-        "@remix-run/eslint-config": "^1.14.0",
-        "@remix-run/serve": "^1.14.0",
+        "@types/node": "^20.19.30",
         "@types/react": "^18.0.25",
         "@types/react-dom": "^18.0.8",
+        "@vitejs/plugin-react": "^4.3.1",
         "eslint": "^8.36.0",
-        "typescript": "^5.0.2"
+        "typescript": "^5.0.2",
+        "vite": "^5.4.8"
     },
     "engines": {
         "node": ">=18"

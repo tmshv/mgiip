@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { useMap } from "react-map-gl";
+import { useMap } from "react-map-gl/mapbox";
 import PopupWithStyle from "./popup-with-style";
 import useMapPointer from "~/hooks/map-pointer";
-import type { MapLayerMouseEvent } from "react-map-gl";
+import type { MapMouseEvent } from "react-map-gl/mapbox";
 
-import styles from "./styles.css";
+import "./styles.css";
 
 function quotes(value: string): string {
     const close = '»'
@@ -27,10 +27,6 @@ function splitCaption(text: string): [string, string] {
     }
     return xs as [string, string]
 }
-
-export const links = () => [
-    { rel: "stylesheet", href: styles },
-];
 
 const style: React.CSSProperties = {
     maxWidth: 300,
@@ -61,7 +57,7 @@ const MapPopup: React.FC<MapPopupProps> = ({ layerName }) => {
             return
         }
         const map = current.getMap();
-        const show = async (event: MapLayerMouseEvent) => {
+        const show = async (event: MapMouseEvent) => {
             if (event.features?.length === 0) {
                 return
             }
@@ -133,4 +129,3 @@ const MapPopup: React.FC<MapPopupProps> = ({ layerName }) => {
 }
 
 export default MapPopup
-

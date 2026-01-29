@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useMap } from "react-map-gl";
+import { useMap } from "react-map-gl/mapbox";
 
 export default function useMapPointer(layerIds: string[]) {
     const { current } = useMap();
@@ -27,4 +27,3 @@ export default function useMapPointer(layerIds: string[]) {
         }
     }, [current, layerIds]);
 }
-

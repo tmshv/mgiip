@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
-import { Popup } from "react-map-gl";
-import type { PopupProps } from "react-map-gl";
+import { Popup } from "react-map-gl/mapbox";
+import type { PopupProps } from "react-map-gl/mapbox";
 import { useNextTick } from "~/hooks/use-next-tick";
 
 // this component will fix an issue from react-map-gl related to custom
@@ -25,4 +25,3 @@ const PopupWithStyle: React.FC<PopupProps> = ({ style, ...props }) => {
 }
 
 export default PopupWithStyle
-

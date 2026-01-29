@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useMap } from "react-map-gl";
+import { useMap } from "react-map-gl/mapbox";
 
 export default function useHover(source: string, layerId: string) {
     const { current } = useMap();
@@ -10,11 +10,11 @@ export default function useHover(source: string, layerId: string) {
             return;
         }
 
-        let hoveredStateId: string | number | null = null;
+        let hoveredStateId: string | number | undefined = undefined;
 
         const over = async (event: mapboxgl.MapLayerMouseEvent) => {
-            if (event.features.length > 0) {
-                if (hoveredStateId !== null) {
+            if (event.features && event.features.length > 0) {
+                if (hoveredStateId !== undefined) {
                     map.setFeatureState(
                         { source, id: hoveredStateId },
                         { hover: false }
@@ -28,13 +28,13 @@ export default function useHover(source: string, layerId: string) {
             }
         }
         const out = async () => {
-            if (hoveredStateId !== null) {
+            if (hoveredStateId !== undefined) {
                 map.setFeatureState(
                     { source, id: hoveredStateId },
                     { hover: false }
                 );
             }
-            hoveredStateId = null;
+            hoveredStateId = undefined;
         }
 
         map.on("mousemove", layerId, over);

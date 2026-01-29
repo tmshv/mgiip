@@ -1,6 +1,5 @@
-import type { LayerProps } from "react-map-gl";
-import { Layer, Map as MapGl, Source } from "react-map-gl";
-import useProjectClick from "~/hooks/use-project-click";
+import type { LayerProps } from "react-map-gl/mapbox";
+import { Layer, Map as MapGl, Source } from "react-map-gl/mapbox";
 import MapLayerHoverable from "./map-layer-hoverable";
 import MapPopup from "./map-popup";
 
@@ -64,23 +63,8 @@ const layerStyleSymbol: LayerProps = {
     },
 };
 
-// const maxBounds: LngLatBoundsLike = [
-//     [8.414178767074475, 28.939372626536084],
-//     [196.44705902596996, 83.1613784193168],
-// ]
-
-const MapCtrl: React.FC = () => {
-    useProjectClick("project-circle")
-
-    return null
-}
-
-export type MapProps = {
-    children: React.ReactNode
-}
-
-const Map: React.FC<MapProps> = ({ children }) => {
-    const mapboxAccessToken = (window as any).ENV.MAPBOX_ACCESS_KEY
+const Map: React.FC = () => {
+    const mapboxAccessToken = import.meta.env.VITE_MAPBOX_ACCESS_KEY;
 
     return (
         <MapGl
@@ -95,9 +79,9 @@ const Map: React.FC<MapProps> = ({ children }) => {
                 height: "100%",
             }}
             mapStyle="mapbox://styles/tmshv/cld4aqnw8000e01qwdzz15s6s"
+            // mapStyle="mapbox://styles/mapbox/standard"
             mapboxAccessToken={mapboxAccessToken}
             minZoom={2}
-            // maxBounds={maxBounds}
             projection={"mercator"}
         >
             <MapLayerHoverable />
@@ -111,15 +95,9 @@ const Map: React.FC<MapProps> = ({ children }) => {
             <Source id="places" type="geojson" data="/places.geojson">
                 <Layer {...layerStyleSymbol} />
             </Source>
-            <MapPopup
-                layerName={"project-circle"}
-            />
-            <MapCtrl />
-
-            {children}
+            <MapPopup layerName={"project-circle"} />
         </MapGl>
     );
 }
 
 export default Map
-
