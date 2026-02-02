@@ -12,7 +12,7 @@ export default function useHover(source: string, layerId: string) {
 
         let hoveredStateId: string | number | undefined = undefined;
 
-        const over = async (event: mapboxgl.MapLayerMouseEvent) => {
+        const over = async (event: mapboxgl.MapMouseEvent) => {
             if (event.features && event.features.length > 0) {
                 if (hoveredStateId !== undefined) {
                     map.setFeatureState(
