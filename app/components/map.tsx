@@ -54,6 +54,24 @@ const unclusteredPointLayer: LayerProps = {
     },
 };
 
+const unclusteredPointLabelLayer: LayerProps = {
+    id: "unclustered-point-label",
+    type: "symbol",
+    filter: ["!", ["has", "point_count"]],
+    layout: {
+        "text-field": ["get", "нп"],
+        "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
+        "text-size": 12,
+        "text-anchor": "left",
+        "text-offset": [0.8, 0],
+    },
+    paint: {
+        "text-color": "#333333",
+        "text-halo-color": "#ffffff",
+        "text-halo-width": 1,
+    },
+};
+
 const Map: React.FC<MapProps> = ({ clusterProperty }) => {
     const mapboxAccessToken = import.meta.env.VITE_MAPBOX_ACCESS_KEY;
 
@@ -88,6 +106,7 @@ const Map: React.FC<MapProps> = ({ clusterProperty }) => {
                 <Layer {...clusterLayer} />
                 <Layer {...clusterCountLayer} />
                 <Layer {...unclusteredPointLayer} />
+                <Layer {...unclusteredPointLabelLayer} />
             </Source>
             <MapPopup layerName={"unclustered-point"} />
         </MapGl>
