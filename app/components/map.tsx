@@ -1,5 +1,7 @@
-import type { LayerProps } from "react-map-gl/mapbox";
+import { useCallback, useRef } from "react";
+import type { LayerProps, MapRef, MapMouseEvent } from "react-map-gl/mapbox";
 import { Layer, Map as MapGl, Source } from "react-map-gl/mapbox";
+import type { GeoJSONSource } from "mapbox-gl";
 import MapPopup from "./map-popup";
 
 export type MapProps = {
@@ -74,9 +76,39 @@ const unclusteredPointLabelLayer: LayerProps = {
 
 const Map: React.FC<MapProps> = ({ clusterProperty }) => {
     const mapboxAccessToken = import.meta.env.VITE_MAPBOX_ACCESS_KEY;
+    const mapRef = useRef<MapRef>(null);
+
+    const handleClusterClick = useCallback((e: MapMouseEvent) => {
+        const map = mapRef.current;
+        if (!map) return;
+
+        const features = map.queryRenderedFeatures(e.point, {
+            layers: ["clusters"],
+        });
+
+        if (!features.length) return;
+
+        const clusterId = features[0].properties?.cluster_id;
+        if (clusterId === undefined) return;
+
+        const source = map.getSource("dataset") as GeoJSONSource;
+        source.getClusterExpansionZoom(clusterId, (err, zoom) => {
+            if (err || zoom === undefined) return;
+
+            const geometry = features[0].geometry;
+            if (geometry.type !== "Point") return;
+
+            map.easeTo({
+                center: geometry.coordinates as [number, number],
+                zoom: zoom,
+            });
+        });
+    }, []);
 
     return (
         <MapGl
+            ref={mapRef}
+            onClick={handleClusterClick}
             hash={true}
             initialViewState={{
                 longitude: 96.734667,
@@ -91,6 +123,7 @@ const Map: React.FC<MapProps> = ({ clusterProperty }) => {
             mapboxAccessToken={mapboxAccessToken}
             minZoom={2}
             projection={"mercator"}
+            interactiveLayerIds={["clusters"]}
         >
             <Source
                 id="dataset"
