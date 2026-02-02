@@ -3,6 +3,7 @@ import { useMemo } from "react";
 type Attribute = {
     key: string;
     value: string | number;
+    highlight?: boolean;
 };
 
 export type PopupData = {
@@ -48,6 +49,7 @@ function buildAttributes(
         attributes.push({
             key: "победил/подавался",
             value: `${pobediteli ?? 0} / ${podavalsya ?? 0}`,
+            highlight: true,
         });
     }
 
@@ -56,6 +58,7 @@ function buildAttributes(
         attributes.push({
             key: "доля побед",
             value: dolyaPobed,
+            highlight: true,
         });
     }
 

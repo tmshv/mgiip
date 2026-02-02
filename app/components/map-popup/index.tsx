@@ -65,10 +65,10 @@ const MapPopup: React.FC<MapPopupProps> = ({
             </div>
             <table className="properties-table">
                 <tbody>
-                    {data.attributes.map(({ key, value }) => (
+                    {data.attributes.map(({ key, value, highlight }) => (
                         <tr key={key}>
                             <td className="prop-key">{key}</td>
-                            <td className="prop-value">{String(value)}</td>
+                            <td className={highlight ? "prop-value prop-value-highlight" : "prop-value"}>{String(value)}</td>
                         </tr>
                     ))}
                 </tbody>

@@ -54,3 +54,8 @@
 .prop-value {
     color: #333;
 }
+
+.prop-value-highlight {
+    font-weight: 700;
+    font-size: 14px;
+}
