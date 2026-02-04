@@ -6,12 +6,12 @@ import MapPopup from "./map-popup";
 import DatasetLayer from "./dataset-layer";
 
 export type MapProps = {
-    clusterProperty: string;
+    labelProperty: string;
 };
 
 const DATASET_COUNT = 89;
 
-const Map: React.FC<MapProps> = ({ clusterProperty }) => {
+const Map: React.FC<MapProps> = ({ labelProperty }: MapProps) => {
     const mapboxAccessToken = import.meta.env.VITE_MAPBOX_ACCESS_KEY;
     const mapRef = useRef<MapRef>(null);
 
@@ -41,14 +41,14 @@ const Map: React.FC<MapProps> = ({ clusterProperty }) => {
         const sourceId = (features[0] as any).source as string;
         const source = map.getSource(sourceId) as GeoJSONSource;
         source.getClusterExpansionZoom(clusterId, (err, zoom) => {
-            if (err || zoom === undefined) return;
+            if (err || zoom === undefined || zoom === null) return;
 
             const geometry = features[0].geometry;
             if (geometry.type !== "Point") return;
 
             map.easeTo({
                 center: geometry.coordinates as [number, number],
-                zoom: zoom,
+                zoom,
             });
         });
     }, [clusterLayerIds]);
@@ -74,7 +74,7 @@ const Map: React.FC<MapProps> = ({ clusterProperty }) => {
             interactiveLayerIds={clusterLayerIds}
         >
             {Array.from({ length: DATASET_COUNT }, (_, i) => i + 1).map(id => (
-                <DatasetLayer key={id} id={id} clusterProperty={clusterProperty} />
+                <DatasetLayer key={id} id={id} labelProperty={labelProperty} />
             ))}
             <MapPopup layerNames={unclusteredPointLayerIds} />
         </MapGl>

@@ -4,13 +4,13 @@ import type { LayerProps } from "react-map-gl/mapbox";
 
 export type DatasetLayerProps = {
     id: number;
-    clusterProperty: string;
+    labelProperty: string;
 };
 
-export default function DatasetLayer({ id, clusterProperty }: DatasetLayerProps) {
+export default function DatasetLayer({ id, labelProperty }: DatasetLayerProps) {
     const clusterProperties = useMemo(() => ({
-        sum: ["+", ["get", clusterProperty]],
-    }), [clusterProperty]);
+        sum: ["+", ["get", labelProperty]],
+    }), [labelProperty]);
 
     const clusterLayer: LayerProps = useMemo(() => ({
         id: `clusters-${id}`,
@@ -53,13 +53,30 @@ export default function DatasetLayer({ id, clusterProperty }: DatasetLayerProps)
         type: "circle",
         filter: ["!", ["has", "point_count"]],
         paint: {
-            "circle-radius": 5,
+            "circle-radius": 6,
             "circle-color": "#111111",
             "circle-stroke-width": 2,
             "circle-stroke-color": "#eeeeee",
         },
     }), [id]);
 
+    // Layer to display the property value as text inside the circle
+    const unclusteredPointValueLayer: LayerProps = useMemo(() => ({
+        id: `unclustered-point-value-${id}`,
+        type: "symbol",
+        filter: ["!", ["has", "point_count"]],
+        layout: {
+            "text-field": ["get", labelProperty],
+            "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
+            "text-size": 10,
+            "text-anchor": "center", // Center the text in the circle
+        },
+        paint: {
+            "text-color": "#ffffff",
+        },
+    }), [id, labelProperty]);
+
+    // Original label layer to show the name to the side
     const unclusteredPointLabelLayer: LayerProps = useMemo(() => ({
         id: `unclustered-point-label-${id}`,
         type: "symbol",
@@ -80,6 +97,7 @@ export default function DatasetLayer({ id, clusterProperty }: DatasetLayerProps)
 
     return (
         <Source
+            key={`dataset-${id}-${labelProperty}`} // Add key to force re-render when labelProperty changes
             id={`dataset-${id}`}
             type="geojson"
             data={`/dataset${id}.geojson`}
@@ -91,6 +109,9 @@ export default function DatasetLayer({ id, clusterProperty }: DatasetLayerProps)
             <Layer {...clusterLayer} />
             <Layer {...clusterCountLayer} />
             <Layer {...unclusteredPointLayer} />
+            {/* Text inside the circle */}
+            <Layer {...unclusteredPointValueLayer} />
+            {/* Name label to the side */}
             <Layer {...unclusteredPointLabelLayer} />
         </Source>
     );
