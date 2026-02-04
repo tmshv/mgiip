@@ -97,6 +97,7 @@ export default function DatasetLayer({ id, labelProperty }: DatasetLayerProps) {
 
     return (
         <Source
+            key={`dataset-${id}-${labelProperty}`} // Add key to force re-render when labelProperty changes
             id={`dataset-${id}`}
             type="geojson"
             data={`/dataset${id}.geojson`}

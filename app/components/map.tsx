@@ -11,7 +11,7 @@ export type MapProps = {
 
 const DATASET_COUNT = 89;
 
-const Map: React.FC<MapProps> = ({ labelProperty }) => {
+const Map: React.FC<MapProps> = ({ labelProperty }: MapProps) => {
     const mapboxAccessToken = import.meta.env.VITE_MAPBOX_ACCESS_KEY;
     const mapRef = useRef<MapRef>(null);
 
