@@ -4,14 +4,13 @@ import type { LayerProps } from "react-map-gl/mapbox";
 
 export type DatasetLayerProps = {
     id: number;
-    clusterProperty: string;
-    displayProperty: string;
+    labelProperty: string;
 };
 
-export default function DatasetLayer({ id, clusterProperty, displayProperty }: DatasetLayerProps) {
+export default function DatasetLayer({ id, labelProperty }: DatasetLayerProps) {
     const clusterProperties = useMemo(() => ({
-        sum: ["+", ["get", clusterProperty]],
-    }), [clusterProperty]);
+        sum: ["+", ["get", labelProperty]],
+    }), [labelProperty]);
 
     const clusterLayer: LayerProps = useMemo(() => ({
         id: `clusters-${id}`,
@@ -67,7 +66,7 @@ export default function DatasetLayer({ id, clusterProperty, displayProperty }: D
         type: "symbol",
         filter: ["!", ["has", "point_count"]],
         layout: {
-            "text-field": ["get", displayProperty],
+            "text-field": ["get", labelProperty],
             "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
             "text-size": 10,
             "text-anchor": "center", // Center the text in the circle
@@ -75,7 +74,7 @@ export default function DatasetLayer({ id, clusterProperty, displayProperty }: D
         paint: {
             "text-color": "#ffffff",
         },
-    }), [id, displayProperty]);
+    }), [id, labelProperty]);
 
     // Original label layer to show the name to the side
     const unclusteredPointLabelLayer: LayerProps = useMemo(() => ({

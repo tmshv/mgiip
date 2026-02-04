@@ -6,13 +6,12 @@ import MapPopup from "./map-popup";
 import DatasetLayer from "./dataset-layer";
 
 export type MapProps = {
-    clusterProperty: string;
-    displayProperty: string;
+    labelProperty: string;
 };
 
 const DATASET_COUNT = 89;
 
-const Map: React.FC<MapProps> = ({ clusterProperty, displayProperty }) => {
+const Map: React.FC<MapProps> = ({ labelProperty }) => {
     const mapboxAccessToken = import.meta.env.VITE_MAPBOX_ACCESS_KEY;
     const mapRef = useRef<MapRef>(null);
 
@@ -75,7 +74,7 @@ const Map: React.FC<MapProps> = ({ clusterProperty, displayProperty }) => {
             interactiveLayerIds={clusterLayerIds}
         >
             {Array.from({ length: DATASET_COUNT }, (_, i) => i + 1).map(id => (
-                <DatasetLayer key={id} id={id} clusterProperty={clusterProperty} displayProperty={displayProperty} />
+                <DatasetLayer key={id} id={id} labelProperty={labelProperty} />
             ))}
             <MapPopup layerNames={unclusteredPointLayerIds} />
         </MapGl>
