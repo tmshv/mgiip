@@ -1,6 +1,6 @@
 import type { MapLayerMouseEvent } from "mapbox-gl";
 import { useEffect } from "react";
-import { useMap } from "react-map-gl";
+import { useMap } from "react-map-gl/mapbox";
 
 export type MapClickCallback = (event: MapLayerMouseEvent) => void
 

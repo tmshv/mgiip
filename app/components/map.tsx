@@ -1,89 +1,62 @@
-import type { LayerProps } from "react-map-gl";
-import { Layer, Map as MapGl, Source } from "react-map-gl";
-import useProjectClick from "~/hooks/use-project-click";
-import MapLayerHoverable from "./map-layer-hoverable";
+import { useCallback, useMemo, useRef } from "react";
+import type { MapRef, MapMouseEvent } from "react-map-gl/mapbox";
+import { Map as MapGl } from "react-map-gl/mapbox";
+import type { GeoJSONSource } from "mapbox-gl";
 import MapPopup from "./map-popup";
-
-const layerStyleCircle: LayerProps = {
-    id: "project-circle",
-    type: "circle",
-    paint: {
-        "circle-radius": 5,
-        "circle-color": "#111111",
-        "circle-stroke-width": 2,
-        "circle-stroke-color": "#eeeeee",
-    }
-};
-
-const layerStyleFill: LayerProps = {
-    id: "project-fill",
-    type: "fill",
-    paint: {
-        "fill-color": "#ee1111",
-        "fill-opacity": [
-            "interpolate",
-            ["linear"],
-            ["zoom"],
-            12, 0,
-            13, 0.35,
-        ],
-    },
-    minzoom: 12,
-};
-
-const layerStyleLine: LayerProps = {
-    id: "project-line",
-    type: "line",
-    paint: {
-        "line-color": "#ee1111",
-        "line-width": 1,
-        "line-opacity": [
-            "interpolate",
-            ["linear"],
-            ["zoom"],
-            12, 0,
-            13, 1,
-        ],
-    },
-    minzoom: 12,
-};
-
-const layerStyleSymbol: LayerProps = {
-    id: "place-name",
-    type: "symbol",
-    paint: {
-        "text-color": "#000000",
-        "text-halo-color": "#ffffff",
-        "text-halo-width": 4,
-        "text-translate": [10, 0],
-    },
-    layout: {
-        "text-field": ["get", "name"],
-        "text-size": 10,
-        "text-anchor": "left",
-    },
-};
-
-// const maxBounds: LngLatBoundsLike = [
-//     [8.414178767074475, 28.939372626536084],
-//     [196.44705902596996, 83.1613784193168],
-// ]
-
-const MapCtrl: React.FC = () => {
-    useProjectClick("project-circle")
-
-    return null
-}
+import DatasetLayer from "./dataset-layer";
 
 export type MapProps = {
-    children: React.ReactNode
-}
+    clusterProperty: string;
+};
 
-const Map: React.FC<MapProps> = ({ children }) => {
-    const mapboxAccessToken = (window as any).ENV.MAPBOX_ACCESS_KEY
+const DATASET_COUNT = 89;
+
+const Map: React.FC<MapProps> = ({ clusterProperty }) => {
+    const mapboxAccessToken = import.meta.env.VITE_MAPBOX_ACCESS_KEY;
+    const mapRef = useRef<MapRef>(null);
+
+    const clusterLayerIds = useMemo(
+        () => Array.from({ length: DATASET_COUNT }, (_, i) => `clusters-${i + 1}`),
+        []
+    );
+
+    const unclusteredPointLayerIds = useMemo(
+        () => Array.from({ length: DATASET_COUNT }, (_, i) => `unclustered-point-${i + 1}`),
+        []
+    );
+
+    const handleClusterClick = useCallback((e: MapMouseEvent) => {
+        const map = mapRef.current;
+        if (!map) return;
+
+        const features = map.queryRenderedFeatures(e.point, {
+            layers: clusterLayerIds,
+        });
+
+        if (!features.length) return;
+
+        const clusterId = features[0].properties?.cluster_id;
+        if (clusterId === undefined) return;
+
+        const sourceId = (features[0] as any).source as string;
+        const source = map.getSource(sourceId) as GeoJSONSource;
+        source.getClusterExpansionZoom(clusterId, (err, zoom) => {
+            if (err || zoom === undefined) return;
+
+            const geometry = features[0].geometry;
+            if (geometry.type !== "Point") return;
+
+            map.easeTo({
+                center: geometry.coordinates as [number, number],
+                zoom: zoom,
+            });
+        });
+    }, [clusterLayerIds]);
 
     return (
         <MapGl
+            ref={mapRef}
+            onClick={handleClusterClick}
             hash={true}
             initialViewState={{
                 longitude: 96.734667,
@@ -97,29 +70,15 @@ const Map: React.FC<MapProps> = ({ children }) => {
             mapStyle="mapbox://styles/tmshv/cld4aqnw8000e01qwdzz15s6s"
             mapboxAccessToken={mapboxAccessToken}
             minZoom={2}
-            // maxBounds={maxBounds}
             projection={"mercator"}
+            interactiveLayerIds={clusterLayerIds}
         >
-            <MapLayerHoverable />
-            <Source id="project-boundaries" type="geojson" data="/boundaries.geojson">
-                <Layer {...layerStyleFill} />
-                <Layer {...layerStyleLine} />
-            </Source>
-            <Source id="projects" type="geojson" data="/projects.geojson">
-                <Layer {...layerStyleCircle} />
-            </Source>
-            <Source id="places" type="geojson" data="/places.geojson">
-                <Layer {...layerStyleSymbol} />
-            </Source>
-            <MapPopup
-                layerName={"project-circle"}
-            />
-            <MapCtrl />
-
-            {children}
+            {Array.from({ length: DATASET_COUNT }, (_, i) => i + 1).map(id => (
+                <DatasetLayer key={id} id={id} clusterProperty={clusterProperty} />
+            ))}
+            <MapPopup layerNames={unclusteredPointLayerIds} />
         </MapGl>
     );
 }
 
 export default Map
-

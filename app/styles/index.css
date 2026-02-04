@@ -1,15 +1,17 @@
 @font-face {
     font-family: "Aeroport";
     font-display: swap;
-	src: url("/assets/fonts/Aeroport-regular.otf") format("opentype"),
-         url("/assets/fonts/Aeroport-regular.ttf") format("truetype");
+    src:
+        url("/assets/fonts/Aeroport-regular.otf") format("opentype"),
+        url("/assets/fonts/Aeroport-regular.ttf") format("truetype");
 }
 
 @font-face {
     font-family: "Aeroport Mono";
     font-display: swap;
-	src: url("/assets/fonts/Aeroport-monospaced.otf") format("opentype"),
-         url("/assets/fonts/Aeroport-monospaced.ttf") format("truetype");
+    src:
+        url("/assets/fonts/Aeroport-monospaced.otf") format("opentype"),
+        url("/assets/fonts/Aeroport-monospaced.ttf") format("truetype");
 }
 
 body {
@@ -25,3 +27,7 @@ body {
     font-size: 16px;
 }
 
+#root {
+    width: 100%;
+    height: 100%;
+}

@@ -1,136 +1,80 @@
-import { useEffect, useState } from "react";
-import { useMap } from "react-map-gl";
 import PopupWithStyle from "./popup-with-style";
 import useMapPointer from "~/hooks/map-pointer";
-import type { MapLayerMouseEvent } from "react-map-gl";
+import { useMapHover } from "~/hooks/use-map-hover";
+import { usePopupData } from "~/hooks/use-popup-data";
 
-import styles from "./styles.css";
-
-function quotes(value: string): string {
-    const close = '»'
-    // skip close quote if it is already in the string
-    if (value.charAt(value.length - 1) === close) {
-        return `«${value}`
-    }
-    return `«${value}»`
-}
-
-function location(state: string, city: string): string {
-    const nbsp = "\u00A0"
-    return `${state}, г.${nbsp}${city}`
-}
-
-function splitCaption(text: string): [string, string] {
-    const xs = text.split("\n\n")
-    if (xs.length === 1) {
-        return [text, ""]
-    }
-    return xs as [string, string]
-}
-
-export const links = () => [
-    { rel: "stylesheet", href: styles },
-];
+import "./styles.css";
 
 const style: React.CSSProperties = {
-    maxWidth: 300,
+    maxWidth: 400,
 }
-
-type Info = {
-    coord: GeoJSON.Position,
-    state: string,
-    city: string,
-    year: number,
-    name: string,
-    caption: string,
-    src: string,
-    extra: string
-};
 
 export type MapPopupProps = {
-    layerName: string
+    layerNames: string[];
+    cityTypeKey?: string;
+    cityNameKey?: string;
+    onpKey?: string;
+    regionKey?: string;
+    districtKey?: string;
+    populationKey?: string;
 }
 
-const MapPopup: React.FC<MapPopupProps> = ({ layerName }) => {
-    const [info, setInfo] = useState<Info | null>(null);
-    const { current } = useMap();
+const MapPopup: React.FC<MapPopupProps> = ({
+    layerNames,
+    cityTypeKey = "тип",
+    cityNameKey = "нп",
+    onpKey = "онп",
+    regionKey = "регион",
+    districtKey = "федеральный округ",
+    populationKey = "население",
+}) => {
+    useMapPointer(layerNames);
+    const { feature, clear } = useMapHover(layerNames);
+    const data = usePopupData({
+        properties: feature?.properties ?? null,
+        cityTypeKey,
+        cityNameKey,
+        onpKey,
+        regionKey,
+        districtKey,
+        populationKey,
+    });
 
-    useMapPointer([layerName]);
-    useEffect(() => {
-        if (!current) {
-            return
-        }
-        const map = current.getMap();
-        const show = async (event: MapLayerMouseEvent) => {
-            if (event.features?.length === 0) {
-                return
-            }
-            const feature = event.features![0]
-            setInfo(null);
-            if (!feature.properties) {
-                return;
-            }
-            const geom = feature.geometry as GeoJSON.Point;
-            const [caption, extra] = splitCaption(feature.properties.caption)
-            setInfo({
-                coord: geom.coordinates,
-                name: feature.properties.name,
-                year: feature.properties.year,
-                state: feature.properties.state,
-                city: feature.properties.city,
-                src: feature.properties.src,
-                caption,
-                extra,
-            });
-        }
-        const clear = () => {
-            setInfo(null)
-        }
-
-        map.on("mouseover", layerName, show);
-        map.on("mouseleave", layerName, clear);
-
-        return () => {
-            map.off("mouseover", layerName, show);
-            map.off("mouseleave", layerName, clear);
-        }
-    }, [current, layerName]);
-
-    if (!info) {
+    if (!feature || !data) {
         return null;
     }
 
     return (
         <PopupWithStyle
-            longitude={info.coord[0]}
-            latitude={info.coord[1]}
+            longitude={feature.coord[0]}
+            latitude={feature.coord[1]}
             anchor="bottom"
-            onClose={() => {
-                setInfo(null)
-            }}
-            // closeOnClick={false}
+            onClose={clear}
             closeButton={false}
             className={"my-popup"}
             style={style}
         >
-            <img
-                className="cover"
-                src={info.src}
-                alt={"1"}
-                width={100}
-                height={100}
-            />
-            <div className="caption">
-                <p className="caption-head">{quotes(info.name)}</p>
-                <p className="text">{location(info.state, info.city)}</p>
-                <p className="text">{info.caption}</p>
-                {!info.extra ? null : (
-                    <p className="caption-footer">{info.extra}</p>
-                )}
+            <h2 className="popup-header">
+                {data.title}
+                {data.onp && <span className="popup-onp"> ({data.onp})</span>}
+            </h2>
+            <div className="popup-location">
+                <div>{data.region}</div>
+                <div className="popup-location-district">{data.fedokrug}</div>
+                <div className="popup-population">{data.population} жителей</div>
             </div>
+            <table className="properties-table">
+                <tbody>
+                    {data.attributes.map(({ key, value, highlight }) => (
+                        <tr key={key}>
+                            <td className="prop-key">{key}</td>
+                            <td className={highlight ? "prop-value prop-value-highlight" : "prop-value"}>{String(value)}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
         </PopupWithStyle>
     );
-}
+};
 
-export default MapPopup
-
+export default MapPopup;

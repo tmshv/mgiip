@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import bbox from "@turf/bbox";
+import { bbox } from "@turf/bbox";
 import type { LngLatBoundsLike } from "mapbox-gl";
 
 function createMapById(features: GeoJSON.Feature[]) {

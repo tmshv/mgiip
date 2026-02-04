@@ -30,11 +30,10 @@ export default function MainMap({ children }: MainMapProps) {
         }}>
             <ClientOnly>
                 <Suspense>
-                    <Map>
-                        {children}
-                    </Map>
+                    <Map />
                 </Suspense>
             </ClientOnly>
+            {children}
             <AffinumOverlay />
         </AppContext.Provider>
     );

@@ -27,3 +27,21 @@
     cursor: col-resize;
 }
 
+/* mobile  */
+@media screen and (max-width: 768px) {
+    .float {
+        position: unset;
+        top: unset;
+        right: unset;
+        width: 100% !important;
+        height: 100%;
+        z-index: 10;
+
+        min-width: unset;
+    }
+
+    .float-control {
+        display: none;
+    }
+}
+

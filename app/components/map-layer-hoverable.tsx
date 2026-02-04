@@ -1,7 +1,7 @@
-import { MapboxGeoJSONFeature, MapMouseEvent } from "mapbox-gl";
+import { GeoJSONFeature, MapMouseEvent } from "mapbox-gl";
 import { useEffect, useState } from "react";
-import { LayerProps, useMap } from "react-map-gl";
-import { Layer, Source } from "react-map-gl";
+import { LayerProps, useMap } from "react-map-gl/mapbox";
+import { Layer, Source } from "react-map-gl/mapbox";
 import useHover from "~/hooks/use-hover";
 
 const layer: LayerProps = {
@@ -20,7 +20,7 @@ const layer: LayerProps = {
 };
 
 type Event = MapMouseEvent & {
-    features?: MapboxGeoJSONFeature[]
+    features?: GeoJSONFeature[]
 }
 
 export type MapLayerHoverableProps = {
@@ -93,4 +93,3 @@ const MapLayerHoverable: React.FC<MapLayerHoverableProps> = () => {
 }
 
 export default MapLayerHoverable
-
