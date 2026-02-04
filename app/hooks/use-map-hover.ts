@@ -7,7 +7,7 @@ export type HoverFeature = {
     properties: GeoJSON.GeoJsonProperties;
 };
 
-export function useMapHover(layerName: string): { feature: HoverFeature | null; clear: () => void } {
+export function useMapHover(layerNames: string[]): { feature: HoverFeature | null; clear: () => void } {
     const [feature, setFeature] = useState<HoverFeature | null>(null);
     const { current } = useMap();
 
@@ -36,14 +36,14 @@ export function useMapHover(layerName: string): { feature: HoverFeature | null; 
             setFeature(null);
         };
 
-        map.on("mouseover", layerName, show);
-        map.on("mouseleave", layerName, hide);
+        map.on("mouseover", layerNames, show);
+        map.on("mouseleave", layerNames, hide);
 
         return () => {
-            map.off("mouseover", layerName, show);
-            map.off("mouseleave", layerName, hide);
+            map.off("mouseover", layerNames, show);
+            map.off("mouseleave", layerNames, hide);
         };
-    }, [current, layerName]);
+    }, [current, layerNames]);
 
     const clear = () => setFeature(null);
 

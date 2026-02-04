@@ -10,7 +10,7 @@ const style: React.CSSProperties = {
 }
 
 export type MapPopupProps = {
-    layerName: string;
+    layerNames: string[];
     cityTypeKey?: string;
     cityNameKey?: string;
     onpKey?: string;
@@ -20,7 +20,7 @@ export type MapPopupProps = {
 }
 
 const MapPopup: React.FC<MapPopupProps> = ({
-    layerName,
+    layerNames,
     cityTypeKey = "тип",
     cityNameKey = "нп",
     onpKey = "онп",
@@ -28,8 +28,8 @@ const MapPopup: React.FC<MapPopupProps> = ({
     districtKey = "федеральный округ",
     populationKey = "население",
 }) => {
-    useMapPointer([layerName]);
-    const { feature, clear } = useMapHover(layerName);
+    useMapPointer(layerNames);
+    const { feature, clear } = useMapHover(layerNames);
     const data = usePopupData({
         properties: feature?.properties ?? null,
         cityTypeKey,
