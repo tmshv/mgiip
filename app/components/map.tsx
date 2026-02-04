@@ -42,14 +42,14 @@ const Map: React.FC<MapProps> = ({ clusterProperty, displayProperty }) => {
         const sourceId = (features[0] as any).source as string;
         const source = map.getSource(sourceId) as GeoJSONSource;
         source.getClusterExpansionZoom(clusterId, (err, zoom) => {
-            if (err || zoom === undefined) return;
+            if (err || zoom === undefined || zoom === null) return;
 
             const geometry = features[0].geometry;
             if (geometry.type !== "Point") return;
 
             map.easeTo({
                 center: geometry.coordinates as [number, number],
-                zoom: zoom,
+                zoom,
             });
         });
     }, [clusterLayerIds]);
