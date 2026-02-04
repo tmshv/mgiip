@@ -6,5 +6,8 @@ import "~/components/map-popup/styles.css";
 import Map from "~/components/map";
 
 export default function App() {
-  return <Map clusterProperty="подавался" />;
+    return <Map
+        clusterProperty="победители"
+        displayProperty="победители"
+    />;
 }
