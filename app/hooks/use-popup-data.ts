@@ -68,7 +68,7 @@ function buildAttributes(
         if (podacha != null || pobeda != null) {
             attributes.push({
                 key: contest,
-                value: `${podacha} / ${pobeda}`,
+                value: `${pobeda} / ${podacha}`,
             });
         }
     }
