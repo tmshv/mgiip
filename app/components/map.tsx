@@ -78,7 +78,7 @@ const Map: React.FC<MapProps> = ({ labelProperty, showRegions }: MapProps) => {
             projection={"mercator"}
             interactiveLayerIds={showRegions ? [] : clusterLayerIds}
         >
-            {showRegions && <MapLayerHoverable />}
+            {/*{showRegions && <MapLayerHoverable />}*/}
 
             {showRegions ? (
                 <RegionLayer labelProperty={labelProperty} />
