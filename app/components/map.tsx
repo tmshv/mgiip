@@ -7,6 +7,9 @@ import ClusterPopup from "./cluster-popup";
 import DatasetLayer from "./dataset-layer";
 import RegionLayer from "./region-layer";
 import MapLayerHoverable from "./map-layer-hoverable";
+import RainbowLayer from "./rainbow-layer";
+import AuroraLayer from "./aurora-layer";
+import BirdLayer from "./bird-layer";
 
 export type MapProps = {
     labelProperty: string;
@@ -99,6 +102,9 @@ const Map: React.FC<MapProps> = ({ labelProperty, showRegions }: MapProps) => {
                     />
                 </>
             )}
+            <AuroraLayer />
+            <RainbowLayer />
+            <BirdLayer />
         </MapGl>
     );
 }
