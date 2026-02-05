@@ -4,6 +4,7 @@ import { Map as MapGl } from "react-map-gl/mapbox";
 import type { GeoJSONSource } from "mapbox-gl";
 import MapPopup from "./map-popup";
 import DatasetLayer from "./dataset-layer";
+import MapLayerHoverable from "./map-layer-hoverable";
 
 export type MapProps = {
     labelProperty: string;
@@ -74,6 +75,8 @@ const Map: React.FC<MapProps> = ({ labelProperty }: MapProps) => {
             projection={"mercator"}
             interactiveLayerIds={clusterLayerIds}
         >
+            <MapLayerHoverable />
+
             {Array.from({ length: DATASET_COUNT }, (_, i) => i + 1).map(id => (
                 <DatasetLayer key={id} id={id} labelProperty={labelProperty} />
             ))}
