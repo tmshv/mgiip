@@ -7,17 +7,19 @@ import { useControls } from "leva";
 import Map from "~/components/map";
 
 export default function App() {
-    const { label } = useControls({
+    const { label, regions } = useControls({
         label: {
             options: {
                 "подавался": "подавался",
                 "победители": "победители",
             },
             value: "победители"
-        }
+        },
+        regions: false,
     });
 
     return <Map
         labelProperty={label}
+        showRegions={regions}
     />;
 }

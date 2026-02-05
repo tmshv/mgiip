@@ -3,16 +3,19 @@ import type { MapRef, MapMouseEvent } from "react-map-gl/mapbox";
 import { Map as MapGl } from "react-map-gl/mapbox";
 import type { GeoJSONSource } from "mapbox-gl";
 import MapPopup from "./map-popup";
+import ClusterPopup from "./cluster-popup";
 import DatasetLayer from "./dataset-layer";
+import RegionLayer from "./region-layer";
 import MapLayerHoverable from "./map-layer-hoverable";
 
 export type MapProps = {
     labelProperty: string;
+    showRegions: boolean;
 };
 
 const DATASET_COUNT = 89;
 
-const Map: React.FC<MapProps> = ({ labelProperty }: MapProps) => {
+const Map: React.FC<MapProps> = ({ labelProperty, showRegions }: MapProps) => {
     const mapboxAccessToken = import.meta.env.VITE_MAPBOX_ACCESS_KEY;
     const mapStyle = import.meta.env.VITE_MAPBOX_STYLE;
     const mapRef = useRef<MapRef>(null);
@@ -73,22 +76,29 @@ const Map: React.FC<MapProps> = ({ labelProperty }: MapProps) => {
             mapboxAccessToken={mapboxAccessToken}
             minZoom={2}
             projection={"mercator"}
-            interactiveLayerIds={clusterLayerIds}
+            interactiveLayerIds={showRegions ? [] : clusterLayerIds}
         >
-            <MapLayerHoverable />
+            {/*{showRegions && <MapLayerHoverable />}*/}
 
-            {Array.from({ length: DATASET_COUNT }, (_, i) => i + 1).map(id => (
-                <DatasetLayer key={id} id={id} labelProperty={labelProperty} />
-            ))}
-            <MapPopup
-                layerNames={unclusteredPointLayerIds}
-                cityTypeKey="тип"
-                cityNameKey="нп"
-                onpKey="онп"
-                regionKey="регион"
-                districtKey="федеральный округ"
-                populationKey="население"
-            />
+            {showRegions ? (
+                <RegionLayer labelProperty={labelProperty} />
+            ) : (
+                <>
+                    {Array.from({ length: DATASET_COUNT }, (_, i) => i + 1).map(id => (
+                        <DatasetLayer key={id} id={id} labelProperty={labelProperty} />
+                    ))}
+                    <ClusterPopup layerNames={clusterLayerIds} />
+                    <MapPopup
+                        layerNames={unclusteredPointLayerIds}
+                        cityTypeKey="тип"
+                        cityNameKey="нп"
+                        onpKey="онп"
+                        regionKey="регион"
+                        districtKey="федеральный округ"
+                        populationKey="население"
+                    />
+                </>
+            )}
         </MapGl>
     );
 }
