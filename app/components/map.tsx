@@ -13,6 +13,7 @@ const DATASET_COUNT = 89;
 
 const Map: React.FC<MapProps> = ({ labelProperty }: MapProps) => {
     const mapboxAccessToken = import.meta.env.VITE_MAPBOX_ACCESS_KEY;
+    const mapStyle = import.meta.env.VITE_MAPBOX_STYLE;
     const mapRef = useRef<MapRef>(null);
 
     const clusterLayerIds = useMemo(
@@ -67,7 +68,7 @@ const Map: React.FC<MapProps> = ({ labelProperty }: MapProps) => {
                 width: "100%",
                 height: "100%",
             }}
-            mapStyle="mapbox://styles/tmshv/cld4aqnw8000e01qwdzz15s6s"
+            mapStyle={mapStyle}
             mapboxAccessToken={mapboxAccessToken}
             minZoom={2}
             projection={"mercator"}
