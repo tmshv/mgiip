@@ -1,34 +1,77 @@
-# Welcome to Remix!
+# MGIIP Map
 
-- [Remix Docs](https://remix.run/docs)
+Interactive map application visualizing urban development grants data across Russia. Displays settlements that participated in urban improvement grant competitions, showing application and award statistics from 2018 to present.
 
-## Deployment
+## Features
 
-After having run the `create-remix` command and selected "Vercel" as a deployment target, you only need to [import your Git repository](https://vercel.com/new) into Vercel, and it will be deployed.
+- Interactive map with point clustering for thousands of settlements
+- Data visualization showing grant applications and awards by year
+- Toggle between "applied" and "winners" view modes
+- Popup details with settlement information (type, region, population, win rate)
+- Custom Mapbox style
 
-If you'd like to avoid using a Git repository, you can also deploy the directory by running [Vercel CLI](https://vercel.com/cli):
+## Prerequisites
 
-```sh
-npm i -g vercel
-vercel
+- [mise](https://mise.jdx.dev/) - runtime version manager
+- Mapbox account with access token
+
+## Setup
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/tmshv/mgiip.git
+cd mgiip
 ```
 
-It is generally recommended to use a Git repository, because future commits will then automatically be deployed by Vercel, through its [Git Integration](https://vercel.com/docs/concepts/git).
+2. Install dependencies:
 
-## Development
-
-To run your Remix app locally, make sure your project's local dependencies are installed:
-
-```sh
+```bash
 npm install
 ```
 
-Afterwards, start the Remix development server like so:
+3. Create a `.env` file in the project root with your Mapbox credentials:
 
 ```sh
+cp .env.example .env
+```
+
+```
+VITE_MAPBOX_ACCESS_KEY=your_mapbox_access_token
+VITE_MAPBOX_STYLE=mapbox://styles/mapbox/standard
+```
+
+4. Start the development server:
+
+```bash
 npm run dev
 ```
 
-Open up [http://localhost:3000](http://localhost:3000) and you should be ready to go!
+The application will be available at [http://localhost:5173](http://localhost:5173)
 
-If you're used to using the `vercel dev` command provided by [Vercel CLI](https://vercel.com/cli) instead, you can also use that, but it's not needed.
+## Scripts
+
+| Command             | Description                  |
+|---------------------|------------------------------|
+| `npm run dev`       | Start development server     |
+| `npm run build`     | Build for production         |
+| `npm run preview`   | Preview production build     |
+| `npm run typecheck` | Run TypeScript type checking |
+
+## Data Format
+
+The GeoJSON datasets contain settlement points with properties including:
+
+- `нп` - Settlement name
+- `тип` - Settlement type (city, village, etc.)
+- `регион` - Region
+- `федеральный округ` - Federal district
+- `население` - Population
+- `подавался` - Total applications submitted
+- `победители` - Total grants won
+- `доля побед` - Win rate percentage
+- Year-specific fields for applications and awards (2018-2025)
+
+## License
+
+MIT

@@ -4,6 +4,7 @@ import { Map as MapGl } from "react-map-gl/mapbox";
 import type { GeoJSONSource } from "mapbox-gl";
 import MapPopup from "./map-popup";
 import DatasetLayer from "./dataset-layer";
+import MapLayerHoverable from "./map-layer-hoverable";
 
 export type MapProps = {
     labelProperty: string;
@@ -13,6 +14,7 @@ const DATASET_COUNT = 89;
 
 const Map: React.FC<MapProps> = ({ labelProperty }: MapProps) => {
     const mapboxAccessToken = import.meta.env.VITE_MAPBOX_ACCESS_KEY;
+    const mapStyle = import.meta.env.VITE_MAPBOX_STYLE;
     const mapRef = useRef<MapRef>(null);
 
     const clusterLayerIds = useMemo(
@@ -67,16 +69,26 @@ const Map: React.FC<MapProps> = ({ labelProperty }: MapProps) => {
                 width: "100%",
                 height: "100%",
             }}
-            mapStyle="mapbox://styles/tmshv/cld4aqnw8000e01qwdzz15s6s"
+            mapStyle={mapStyle}
             mapboxAccessToken={mapboxAccessToken}
             minZoom={2}
             projection={"mercator"}
             interactiveLayerIds={clusterLayerIds}
         >
+            <MapLayerHoverable />
+
             {Array.from({ length: DATASET_COUNT }, (_, i) => i + 1).map(id => (
                 <DatasetLayer key={id} id={id} labelProperty={labelProperty} />
             ))}
-            <MapPopup layerNames={unclusteredPointLayerIds} />
+            <MapPopup
+                layerNames={unclusteredPointLayerIds}
+                cityTypeKey="тип"
+                cityNameKey="нп"
+                onpKey="онп"
+                regionKey="регион"
+                districtKey="федеральный округ"
+                populationKey="население"
+            />
         </MapGl>
     );
 }
