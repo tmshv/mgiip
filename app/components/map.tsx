@@ -76,7 +76,15 @@ const Map: React.FC<MapProps> = ({ labelProperty }: MapProps) => {
             {Array.from({ length: DATASET_COUNT }, (_, i) => i + 1).map(id => (
                 <DatasetLayer key={id} id={id} labelProperty={labelProperty} />
             ))}
-            <MapPopup layerNames={unclusteredPointLayerIds} />
+            <MapPopup
+                layerNames={unclusteredPointLayerIds}
+                cityTypeKey="тип"
+                cityNameKey="нп"
+                onpKey="онп"
+                regionKey="регион"
+                districtKey="федеральный округ"
+                populationKey="население"
+            />
         </MapGl>
     );
 }
