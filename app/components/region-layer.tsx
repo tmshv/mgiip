@@ -3,8 +3,8 @@ import type { LayerProps } from "react-map-gl/mapbox"
 import { Layer, Source } from "react-map-gl/mapbox"
 
 const PROPERTY_MAP: Record<string, string> = {
-    подавался: "applications",
-    победители: "winners",
+    подавался: "итого подано заявок",
+    победители: "победители",
 }
 
 export type RegionLayerProps = {
@@ -12,7 +12,7 @@ export type RegionLayerProps = {
 }
 
 export default function RegionLayer({ labelProperty }: RegionLayerProps) {
-    const dataProperty = PROPERTY_MAP[labelProperty] ?? "winners"
+    const dataProperty = PROPERTY_MAP[labelProperty] ?? "победители"
 
     const fillLayer: LayerProps = useMemo(
         () => ({

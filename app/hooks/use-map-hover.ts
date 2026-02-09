@@ -10,10 +10,18 @@ export type HoverFeature = {
     clusterId: number | null
 }
 
-export function useMapHover(layerNames: string[]): {
+export type UseMapHoverOptions = {
+    followCursor?: boolean
+}
+
+export function useMapHover(
+    layerNames: string[],
+    options?: UseMapHoverOptions,
+): {
     feature: HoverFeature | null
     clear: () => void
 } {
+    const followCursor = options?.followCursor ?? false
     const [feature, setFeature] = useState<HoverFeature | null>(null)
     const { current } = useMap()
 
@@ -31,11 +39,12 @@ export function useMapHover(layerNames: string[]): {
             if (!f.properties) {
                 return
             }
-            const geom = f.geometry as GeoJSON.Point
+            const geom = f.geometry
+            const coord = geom.type === "Point" ? (geom as GeoJSON.Point).coordinates : [event.lngLat.lng, event.lngLat.lat]
             const source = (f as GeoJSONFeature).source
             const clusterId = f.properties?.cluster_id as number | undefined
             setFeature({
-                coord: geom.coordinates,
+                coord,
                 properties: f.properties,
                 source: source ?? null,
                 clusterId: clusterId ?? null,
@@ -46,14 +55,15 @@ export function useMapHover(layerNames: string[]): {
             setFeature(null)
         }
 
-        map.on("mouseover", layerNames, show)
+        const enterEvent = followCursor ? "mousemove" : "mouseover"
+        map.on(enterEvent, layerNames, show)
         map.on("mouseleave", layerNames, hide)
 
         return () => {
-            map.off("mouseover", layerNames, show)
+            map.off(enterEvent, layerNames, show)
             map.off("mouseleave", layerNames, hide)
         }
-    }, [current, layerNames])
+    }, [current, layerNames, followCursor])
 
     const clear = () => setFeature(null)
 

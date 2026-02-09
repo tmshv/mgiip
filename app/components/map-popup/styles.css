@@ -31,6 +31,7 @@
 
 .properties-table {
     width: 100%;
+    table-layout: fixed;
     border-collapse: collapse;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 12px;
@@ -48,11 +49,11 @@
 .prop-key {
     font-weight: 500;
     color: #666;
-    white-space: nowrap;
 }
 
 .prop-value {
     color: #333;
+    text-align: right;
 }
 
 .prop-value-highlight {

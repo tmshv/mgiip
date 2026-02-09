@@ -5,9 +5,9 @@ import { Map as MapGl } from "react-map-gl/mapbox"
 import type { FieldKeys } from "~/types/fields"
 import ClusterPopup from "./cluster-popup"
 import DatasetLayer from "./dataset-layer"
-import MapLayerHoverable from "./map-layer-hoverable"
 import MapPopup from "./map-popup"
 import RegionLayer from "./region-layer"
+import RegionPopup from "./region-popup"
 
 export type MapProps = {
     labelProperty: string
@@ -78,10 +78,11 @@ const AppMap: React.FC<MapProps> = ({ labelProperty, showRegions, fields }: MapP
             projection={"mercator"}
             interactiveLayerIds={showRegions ? [] : clusterLayerIds}
         >
-            {/*{showRegions && <MapLayerHoverable />}*/}
-
             {showRegions ? (
-                <RegionLayer labelProperty={labelProperty} />
+                <>
+                    <RegionLayer labelProperty={labelProperty} />
+                    <RegionPopup labelProperty={labelProperty} />
+                </>
             ) : (
                 <>
                     {Array.from({ length: DATASET_COUNT }, (_, i) => i + 1).map((id) => (
