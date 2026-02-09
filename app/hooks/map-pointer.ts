@@ -9,11 +9,11 @@ export default function useMapPointer(layerIds: string[]) {
         if (!map) {
             return;
         }
-        const over = async () => {
+        const over = () => {
             const element = map.getCanvasContainer();
             element.style.cursor = "pointer";
         }
-        const out = async () => {
+        const out = () => {
             const element = map.getCanvasContainer();
             element.style.cursor = "default";
         }

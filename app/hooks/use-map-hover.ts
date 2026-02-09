@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useMap } from "react-map-gl/mapbox";
 import type { MapMouseEvent } from "react-map-gl/mapbox";
+import type { GeoJSONFeature } from "mapbox-gl";
 
 export type HoverFeature = {
     coord: GeoJSON.Position;
@@ -28,7 +29,7 @@ export function useMapHover(layerNames: string[]): { feature: HoverFeature | nul
                 return;
             }
             const geom = f.geometry as GeoJSON.Point;
-            const source = (f as any).source as string | undefined;
+            const source = (f as GeoJSONFeature).source;
             const clusterId = f.properties?.cluster_id as number | undefined;
             setFeature({
                 coord: geom.coordinates,

@@ -12,7 +12,7 @@ export default function useHover(source: string, layerId: string) {
 
         let hoveredStateId: string | number | undefined = undefined;
 
-        const over = async (event: mapboxgl.MapMouseEvent) => {
+        const over = (event: mapboxgl.MapMouseEvent) => {
             if (event.features && event.features.length > 0) {
                 if (hoveredStateId !== undefined) {
                     map.setFeatureState(
@@ -20,14 +20,16 @@ export default function useHover(source: string, layerId: string) {
                         { hover: false }
                     );
                 }
-                hoveredStateId = event.features[0].id;
+                const featureId = event.features[0].id;
+                if (featureId === undefined) return;
+                hoveredStateId = featureId;
                 map.setFeatureState(
                     { source, id: hoveredStateId },
                     { hover: true }
                 );
             }
         }
-        const out = async () => {
+        const out = () => {
             if (hoveredStateId !== undefined) {
                 map.setFeatureState(
                     { source, id: hoveredStateId },
@@ -41,8 +43,8 @@ export default function useHover(source: string, layerId: string) {
         map.on("mouseleave", layerId, out);
 
         return () => {
-            map.off("mouseover", over);
-            map.off("mouseout", out);
+            map.off("mousemove", layerId, over);
+            map.off("mouseleave", layerId, out);
         }
     }, [current, source, layerId]);
 }

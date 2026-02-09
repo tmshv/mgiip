@@ -2,6 +2,7 @@ import PopupWithStyle from "./popup-with-style";
 import useMapPointer from "~/hooks/map-pointer";
 import { useMapHover } from "~/hooks/use-map-hover";
 import { usePopupData } from "~/hooks/use-popup-data";
+import type { FieldKeys } from "~/types/fields";
 
 import "./styles.css";
 
@@ -11,42 +12,15 @@ const style: React.CSSProperties = {
 
 export type MapPopupProps = {
     layerNames: string[];
-    cityTypeKey: string;
-    cityNameKey: string;
-    onpKey: string;
-    regionKey: string;
-    districtKey: string;
-    populationKey: string;
-    applicationsKey: string;
-    winnersKey: string;
-    winRateKey: string;
+    fields: FieldKeys;
 }
 
-const MapPopup: React.FC<MapPopupProps> = ({
-    layerNames,
-    cityTypeKey,
-    cityNameKey,
-    onpKey,
-    regionKey,
-    districtKey,
-    populationKey,
-    applicationsKey,
-    winnersKey,
-    winRateKey,
-}) => {
+const MapPopup: React.FC<MapPopupProps> = ({ layerNames, fields }) => {
     useMapPointer(layerNames);
     const { feature, clear } = useMapHover(layerNames);
     const data = usePopupData({
         properties: feature?.properties ?? null,
-        cityTypeKey,
-        cityNameKey,
-        onpKey,
-        regionKey,
-        districtKey,
-        populationKey,
-        applicationsKey,
-        winnersKey,
-        winRateKey,
+        fields,
     });
 
     if (!feature || !data) {

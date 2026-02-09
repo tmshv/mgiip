@@ -32,7 +32,12 @@ export default function useProjectBounds(href: string) {
             .then((fc: GeoJSON.FeatureCollection) => {
                 data.current = createMapBySlug(fc.features)
             })
-            .catch(err => { })
+            .catch(err => {
+                if (err instanceof DOMException && err.name === "AbortError") {
+                    return;
+                }
+                console.error("Failed to load project bounds:", err);
+            })
         return () => {
             stop.abort()
         }

@@ -36,11 +36,15 @@ export default function useResizeHandler(startWidth: number, transform: ResizeTr
             })
         }
 
-        ref!.current!.addEventListener("mousedown", down)
+        const el = ref.current;
+        if (!el) return;
+
+        el.addEventListener("mousedown", down)
         document.addEventListener("mouseup", up, true)
         document.addEventListener("mousemove", move, true)
 
         return () => {
+            el.removeEventListener("mousedown", down)
             document.removeEventListener("mouseup", up, true)
             document.removeEventListener("mousemove", move, true)
         }

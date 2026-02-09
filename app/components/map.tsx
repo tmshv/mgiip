@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useRef } from "react";
 import type { MapRef, MapMouseEvent } from "react-map-gl/mapbox";
 import { Map as MapGl } from "react-map-gl/mapbox";
-import type { GeoJSONSource } from "mapbox-gl";
+import type { GeoJSONSource, GeoJSONFeature } from "mapbox-gl";
 import MapPopup from "./map-popup";
 import ClusterPopup from "./cluster-popup";
 import DatasetLayer from "./dataset-layer";
@@ -45,7 +45,8 @@ const Map: React.FC<MapProps> = ({ labelProperty, showRegions, fields }: MapProp
         const clusterId = features[0].properties?.cluster_id;
         if (clusterId === undefined) return;
 
-        const sourceId = (features[0] as any).source as string;
+        const sourceId = (features[0] as GeoJSONFeature).source;
+        if (!sourceId) return;
         const source = map.getSource(sourceId) as GeoJSONSource;
         source.getClusterExpansionZoom(clusterId, (err, zoom) => {
             if (err || zoom === undefined || zoom === null) return;
@@ -92,15 +93,7 @@ const Map: React.FC<MapProps> = ({ labelProperty, showRegions, fields }: MapProp
                     <ClusterPopup layerNames={clusterLayerIds} fields={fields} />
                     <MapPopup
                         layerNames={unclusteredPointLayerIds}
-                        cityTypeKey={fields.cityType}
-                        cityNameKey={fields.cityName}
-                        onpKey={fields.onp}
-                        regionKey={fields.region}
-                        districtKey={fields.district}
-                        populationKey={fields.population}
-                        applicationsKey={fields.applications}
-                        winnersKey={fields.winners}
-                        winRateKey={fields.winRate}
+                        fields={fields}
                     />
                 </>
             )}

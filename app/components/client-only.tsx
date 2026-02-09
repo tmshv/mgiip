@@ -5,7 +5,7 @@ export type ClientOnlyProps = {
     children: ReactNode
 }
 const ClientOnly: React.FC<ClientOnlyProps> = ({ children }) => {
-    let [mounted, setMounted] = useState(false);
+    const [mounted, setMounted] = useState(false);
     useEffect(() => {
         setMounted(true);
     }, []);

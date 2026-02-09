@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import type { FieldKeys } from "~/types/fields";
 
 type Attribute = {
     key: string;
@@ -17,15 +18,7 @@ export type PopupData = {
 
 export type UseFeaturesOptions = {
     properties: GeoJSON.GeoJsonProperties | null;
-    cityTypeKey: string;
-    cityNameKey: string;
-    onpKey: string;
-    regionKey: string;
-    districtKey: string;
-    populationKey: string;
-    applicationsKey: string;
-    winnersKey: string;
-    winRateKey: string;
+    fields: FieldKeys;
 };
 
 const contests = [
@@ -91,20 +84,14 @@ function buildAttributes(
 
 export function usePopupData({
     properties,
-    cityTypeKey,
-    cityNameKey,
-    onpKey,
-    regionKey,
-    districtKey,
-    populationKey,
-    applicationsKey,
-    winnersKey,
-    winRateKey,
+    fields,
 }: UseFeaturesOptions): PopupData | null {
     return useMemo(() => {
         if (!properties) {
             return null;
         }
+
+        const { cityType: cityTypeKey, cityName: cityNameKey, onp: onpKey, region: regionKey, district: districtKey, population: populationKey, applications: applicationsKey, winners: winnersKey, winRate: winRateKey } = fields;
 
         const contestKeys = contests.flatMap((c) => [`${c}_подача`, `${c}_победа`]);
         const headerKeys = [cityTypeKey, cityNameKey, onpKey];
@@ -127,5 +114,5 @@ export function usePopupData({
             population: properties[populationKey],
             attributes: buildAttributes(properties, excludedKeys, applicationsKey, winnersKey, winRateKey),
         };
-    }, [properties, cityTypeKey, cityNameKey, onpKey, regionKey, districtKey, populationKey, applicationsKey, winnersKey, winRateKey]);
+    }, [properties, fields]);
 }

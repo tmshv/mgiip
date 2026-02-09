@@ -56,8 +56,8 @@ const ClusterPopup: React.FC<ClusterPopupProps> = ({ layerNames, fields }) => {
                 ) : (
                     <>
                         <ul className="cluster-popup-list">
-                            {data.leaves.map((leaf, i) => (
-                                <li key={i} className="cluster-popup-item">
+                            {data.leaves.map((leaf) => (
+                                <li key={`${leaf.region}-${leaf.name}`} className="cluster-popup-item">
                                     <span className="cluster-popup-name">
                                         {formatName(leaf.type, leaf.name)}
                                     </span>
