@@ -57,14 +57,22 @@ export default function RegionLayer({ labelProperty }: RegionLayerProps) {
     }), []);
 
     return (
-        <Source
-            id="dataset-regions"
-            type="geojson"
-            data="/dataset-regions.geojson"
-        >
-            <Layer {...fillLayer} />
-            <Layer {...outlineLayer} />
-            <Layer {...labelLayer} />
-        </Source>
+        <>
+            <Source
+                id="dataset-regions"
+                type="geojson"
+                data="/dataset-regions.geojson"
+            >
+                <Layer {...fillLayer} />
+                <Layer {...outlineLayer} />
+            </Source>
+            <Source
+                id="dataset-regions-points"
+                type="geojson"
+                data="/dataset-regions-point.geojson"
+            >
+                <Layer {...labelLayer} />
+            </Source>
+        </>
     );
 }
