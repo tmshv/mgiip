@@ -5,9 +5,10 @@ import type { LayerProps } from "react-map-gl/mapbox";
 export type DatasetLayerProps = {
     id: number;
     labelProperty: string;
+    cityNameKey: string;
 };
 
-export default function DatasetLayer({ id, labelProperty }: DatasetLayerProps) {
+export default function DatasetLayer({ id, labelProperty, cityNameKey }: DatasetLayerProps) {
     const clusterProperties = useMemo(() => ({
         sum: ["+", ["get", labelProperty]],
     }), [labelProperty]);
@@ -82,7 +83,7 @@ export default function DatasetLayer({ id, labelProperty }: DatasetLayerProps) {
         type: "symbol",
         filter: ["!", ["has", "point_count"]],
         layout: {
-            "text-field": ["get", "нп"],
+            "text-field": ["get", cityNameKey],
             "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
             "text-size": 12,
             "text-anchor": "left",
@@ -93,7 +94,7 @@ export default function DatasetLayer({ id, labelProperty }: DatasetLayerProps) {
             "text-halo-color": "#ffffff",
             "text-halo-width": 1,
         },
-    }), [id]);
+    }), [id, cityNameKey]);
 
     return (
         <Source

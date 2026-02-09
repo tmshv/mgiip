@@ -7,15 +7,17 @@ import ClusterPopup from "./cluster-popup";
 import DatasetLayer from "./dataset-layer";
 import RegionLayer from "./region-layer";
 import MapLayerHoverable from "./map-layer-hoverable";
+import type { FieldKeys } from "~/types/fields";
 
 export type MapProps = {
     labelProperty: string;
     showRegions: boolean;
+    fields: FieldKeys;
 };
 
 const DATASET_COUNT = 89;
 
-const Map: React.FC<MapProps> = ({ labelProperty, showRegions }: MapProps) => {
+const Map: React.FC<MapProps> = ({ labelProperty, showRegions, fields }: MapProps) => {
     const mapboxAccessToken = import.meta.env.VITE_MAPBOX_ACCESS_KEY;
     const mapStyle = import.meta.env.VITE_MAPBOX_STYLE;
     const mapRef = useRef<MapRef>(null);
@@ -85,17 +87,20 @@ const Map: React.FC<MapProps> = ({ labelProperty, showRegions }: MapProps) => {
             ) : (
                 <>
                     {Array.from({ length: DATASET_COUNT }, (_, i) => i + 1).map(id => (
-                        <DatasetLayer key={id} id={id} labelProperty={labelProperty} />
+                        <DatasetLayer key={id} id={id} labelProperty={labelProperty} cityNameKey={fields.cityName} />
                     ))}
-                    <ClusterPopup layerNames={clusterLayerIds} />
+                    <ClusterPopup layerNames={clusterLayerIds} fields={fields} />
                     <MapPopup
                         layerNames={unclusteredPointLayerIds}
-                        cityTypeKey="тип"
-                        cityNameKey="нп"
-                        onpKey="онп"
-                        regionKey="регион"
-                        districtKey="федеральный округ"
-                        populationKey="население"
+                        cityTypeKey={fields.cityType}
+                        cityNameKey={fields.cityName}
+                        onpKey={fields.onp}
+                        regionKey={fields.region}
+                        districtKey={fields.district}
+                        populationKey={fields.population}
+                        applicationsKey={fields.applications}
+                        winnersKey={fields.winners}
+                        winRateKey={fields.winRate}
                     />
                 </>
             )}

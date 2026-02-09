@@ -17,12 +17,15 @@ export type PopupData = {
 
 export type UseFeaturesOptions = {
     properties: GeoJSON.GeoJsonProperties | null;
-    cityTypeKey?: string;
-    cityNameKey?: string;
-    onpKey?: string;
-    regionKey?: string;
-    districtKey?: string;
-    populationKey?: string;
+    cityTypeKey: string;
+    cityNameKey: string;
+    onpKey: string;
+    regionKey: string;
+    districtKey: string;
+    populationKey: string;
+    applicationsKey: string;
+    winnersKey: string;
+    winRateKey: string;
 };
 
 const contests = [
@@ -39,12 +42,15 @@ const contests = [
 
 function buildAttributes(
     properties: Record<string, string>,
-    excludedKeys: string[]
+    excludedKeys: string[],
+    applicationsKey: string,
+    winnersKey: string,
+    winRateKey: string,
 ): Attribute[] {
     const attributes: Attribute[] = [];
 
-    const podavalsya = properties["подавался"];
-    const pobediteli = properties["победители"];
+    const podavalsya = properties[applicationsKey];
+    const pobediteli = properties[winnersKey];
     if (podavalsya != null || pobediteli != null) {
         attributes.push({
             key: "победил/подавался",
@@ -53,10 +59,10 @@ function buildAttributes(
         });
     }
 
-    const dolyaPobed = properties["доля побед"];
+    const dolyaPobed = properties[winRateKey];
     if (dolyaPobed != null) {
         attributes.push({
-            key: "доля побед",
+            key: winRateKey,
             value: dolyaPobed,
             highlight: true,
         });
@@ -85,12 +91,15 @@ function buildAttributes(
 
 export function usePopupData({
     properties,
-    cityTypeKey = "тип",
-    cityNameKey = "нп",
-    onpKey = "онп",
-    regionKey = "регион",
-    districtKey = "федеральный округ",
-    populationKey = "население",
+    cityTypeKey,
+    cityNameKey,
+    onpKey,
+    regionKey,
+    districtKey,
+    populationKey,
+    applicationsKey,
+    winnersKey,
+    winRateKey,
 }: UseFeaturesOptions): PopupData | null {
     return useMemo(() => {
         if (!properties) {
@@ -100,7 +109,7 @@ export function usePopupData({
         const contestKeys = contests.flatMap((c) => [`${c}_подача`, `${c}_победа`]);
         const headerKeys = [cityTypeKey, cityNameKey, onpKey];
         const locationKeys = [regionKey, districtKey, populationKey];
-        const topKeys = ["подавался", "победители", "доля побед"];
+        const topKeys = [applicationsKey, winnersKey, winRateKey];
         const excludedKeys = [...contestKeys, ...headerKeys, ...locationKeys, ...topKeys];
 
         const cityType = properties[cityTypeKey];
@@ -116,7 +125,7 @@ export function usePopupData({
             region: properties[regionKey],
             fedokrug: properties[districtKey],
             population: properties[populationKey],
-            attributes: buildAttributes(properties, excludedKeys),
+            attributes: buildAttributes(properties, excludedKeys, applicationsKey, winnersKey, winRateKey),
         };
-    }, [properties, cityTypeKey, cityNameKey, onpKey, regionKey, districtKey, populationKey]);
+    }, [properties, cityTypeKey, cityNameKey, onpKey, regionKey, districtKey, populationKey, applicationsKey, winnersKey, winRateKey]);
 }

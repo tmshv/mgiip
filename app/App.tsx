@@ -5,6 +5,19 @@ import "~/components/map-popup/styles.css";
 
 import { useControls } from "leva";
 import Map from "~/components/map";
+import type { FieldKeys } from "~/types/fields";
+
+const fields: FieldKeys = {
+    cityName: "нп",
+    cityType: "тип",
+    onp: "онп",
+    region: "регион",
+    district: "федеральный округ",
+    population: "население",
+    applications: "подавался",
+    winners: "победители",
+    winRate: "доля побед",
+};
 
 export default function App() {
     const { label, regions } = useControls({
@@ -21,5 +34,6 @@ export default function App() {
     return <Map
         labelProperty={label}
         showRegions={regions}
+        fields={fields}
     />;
 }

@@ -17,6 +17,9 @@ export type MapPopupProps = {
     regionKey: string;
     districtKey: string;
     populationKey: string;
+    applicationsKey: string;
+    winnersKey: string;
+    winRateKey: string;
 }
 
 const MapPopup: React.FC<MapPopupProps> = ({
@@ -27,6 +30,9 @@ const MapPopup: React.FC<MapPopupProps> = ({
     regionKey,
     districtKey,
     populationKey,
+    applicationsKey,
+    winnersKey,
+    winRateKey,
 }) => {
     useMapPointer(layerNames);
     const { feature, clear } = useMapHover(layerNames);
@@ -38,6 +44,9 @@ const MapPopup: React.FC<MapPopupProps> = ({
         regionKey,
         districtKey,
         populationKey,
+        applicationsKey,
+        winnersKey,
+        winRateKey,
     });
 
     if (!feature || !data) {

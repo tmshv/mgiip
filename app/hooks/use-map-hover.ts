@@ -5,6 +5,8 @@ import type { MapMouseEvent } from "react-map-gl/mapbox";
 export type HoverFeature = {
     coord: GeoJSON.Position;
     properties: GeoJSON.GeoJsonProperties;
+    source: string | null;
+    clusterId: number | null;
 };
 
 export function useMapHover(layerNames: string[]): { feature: HoverFeature | null; clear: () => void } {
@@ -26,9 +28,13 @@ export function useMapHover(layerNames: string[]): { feature: HoverFeature | nul
                 return;
             }
             const geom = f.geometry as GeoJSON.Point;
+            const source = (f as any).source as string | undefined;
+            const clusterId = f.properties?.cluster_id as number | undefined;
             setFeature({
                 coord: geom.coordinates,
                 properties: f.properties,
+                source: source ?? null,
+                clusterId: clusterId ?? null,
             });
         };
 

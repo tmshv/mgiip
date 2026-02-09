@@ -66,3 +66,53 @@
     font-weight: 700;
     text-align: center;
 }
+
+.cluster-popup-header {
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 10px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.cluster-popup-loading {
+    padding: 8px 10px;
+    font-size: 13px;
+    color: #888;
+}
+
+.cluster-popup-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-height: 240px;
+    overflow-y: auto;
+}
+
+.cluster-popup-item {
+    padding: 4px 10px;
+    font-size: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.cluster-popup-item:nth-child(even) {
+    background-color: #f5f5f5;
+}
+
+.cluster-popup-name {
+    font-weight: 500;
+    color: #333;
+}
+
+.cluster-popup-region {
+    color: #888;
+    font-size: 11px;
+}
+
+.cluster-popup-more {
+    padding: 4px 10px 8px;
+    font-size: 11px;
+    color: #888;
+    font-style: italic;
+}
