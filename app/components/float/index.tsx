@@ -1,6 +1,6 @@
-import { useCallback, useEffect } from "react";
-import styles from "./styles.css";
-import useResizeHandler, { ResizeTransform } from "~/hooks/use-resize-handler";
+import { useCallback, useEffect } from "react"
+import useResizeHandler, { ResizeTransform } from "~/hooks/use-resize-handler"
+import styles from "./styles.css"
 
 function cssPercent(value: number): string {
     return `${value * 100}%`
@@ -16,9 +16,7 @@ function clamp(value: number, min: number, max: number) {
     return value
 }
 
-export const links = () => [
-    { rel: "stylesheet", href: styles },
-];
+export const links = () => [{ rel: "stylesheet", href: styles }]
 
 export type FloatProps = {
     value: number
@@ -27,7 +25,7 @@ export type FloatProps = {
 }
 
 export const Float: React.FC<FloatProps> = ({ value, children, onChange }) => {
-    const transform = useCallback<ResizeTransform>(value => clamp(value, 0.1, 0.9), [])
+    const transform = useCallback<ResizeTransform>((value) => clamp(value, 0.1, 0.9), [])
     const { ref, width, absoluteWidth } = useResizeHandler(value, transform)
 
     useEffect(() => {
@@ -37,16 +35,14 @@ export const Float: React.FC<FloatProps> = ({ value, children, onChange }) => {
     }, [width, absoluteWidth, onChange])
 
     return (
-        <div className="float" style={{
-            width: cssPercent(width),
-        }}>
-            <div className="float-content">
-                {children}
-            </div>
-            <div className="float-control"
-                ref={ref}
-            />
+        <div
+            className="float"
+            style={{
+                width: cssPercent(width),
+            }}
+        >
+            <div className="float-content">{children}</div>
+            <div className="float-control" ref={ref} />
         </div>
     )
 }
-

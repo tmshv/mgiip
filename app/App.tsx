@@ -1,11 +1,11 @@
-import "mapbox-gl/dist/mapbox-gl.css";
-import "~/styles/index.css";
-import "~/styles/mapbox.css";
-import "~/components/map-popup/styles.css";
+import "mapbox-gl/dist/mapbox-gl.css"
+import "~/styles/index.css"
+import "~/styles/mapbox.css"
+import "~/components/map-popup/styles.css"
 
-import { useControls } from "leva";
-import Map from "~/components/map";
-import type { FieldKeys } from "~/types/fields";
+import { useControls } from "leva"
+import AppMap from "~/components/map"
+import type { FieldKeys } from "~/types/fields"
 
 const fields: FieldKeys = {
     cityName: "нп",
@@ -17,23 +17,19 @@ const fields: FieldKeys = {
     applications: "подавался",
     winners: "победители",
     winRate: "доля побед",
-};
+}
 
 export default function App() {
     const { label, regions } = useControls({
         label: {
             options: {
-                "подавался": "подавался",
-                "победители": "победители",
+                подавался: "подавался",
+                победители: "победители",
             },
-            value: "победители"
+            value: "победители",
         },
         regions: false,
-    });
+    })
 
-    return <Map
-        labelProperty={label}
-        showRegions={regions}
-        fields={fields}
-    />;
+    return <AppMap labelProperty={label} showRegions={regions} fields={fields} />
 }
