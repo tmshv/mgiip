@@ -12,12 +12,13 @@ import RegionPopup from "./region-popup"
 export type MapProps = {
     labelProperty: string
     showRegions: boolean
+    regionProperty: string
     fields: FieldKeys
 }
 
 const DATASET_COUNT = 89
 
-const AppMap: React.FC<MapProps> = ({ labelProperty, showRegions, fields }: MapProps) => {
+const AppMap: React.FC<MapProps> = ({ labelProperty, showRegions, regionProperty, fields }: MapProps) => {
     const mapboxAccessToken = import.meta.env.VITE_MAPBOX_ACCESS_KEY
     const mapStyle = import.meta.env.VITE_MAPBOX_STYLE
     const mapRef = useRef<MapRef>(null)
@@ -80,8 +81,8 @@ const AppMap: React.FC<MapProps> = ({ labelProperty, showRegions, fields }: MapP
         >
             {showRegions ? (
                 <>
-                    <RegionLayer labelProperty={labelProperty} />
-                    <RegionPopup labelProperty={labelProperty} />
+                    <RegionLayer regionProperty={regionProperty} />
+                    <RegionPopup regionProperty={regionProperty} />
                 </>
             ) : (
                 <>

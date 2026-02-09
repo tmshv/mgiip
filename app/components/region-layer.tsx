@@ -2,28 +2,32 @@ import { useMemo } from "react"
 import type { LayerProps } from "react-map-gl/mapbox"
 import { Layer, Source } from "react-map-gl/mapbox"
 
-const PROPERTY_MAP: Record<string, string> = {
-    подавался: "итого подано заявок",
-    победители: "победители",
+const RANGES: Record<string, number> = {
+    "количество городов-участников конкурса": 75,
+    "количество ОНП": 65,
+    "итого подано заявок": 115,
+    победители: 55,
+    байес: 75,
+    "Оптимальность участия (доля побед)": 100,
 }
 
 export type RegionLayerProps = {
-    labelProperty: string
+    regionProperty: string
 }
 
-export default function RegionLayer({ labelProperty }: RegionLayerProps) {
-    const dataProperty = PROPERTY_MAP[labelProperty] ?? "победители"
+export default function RegionLayer({ regionProperty }: RegionLayerProps) {
+    const max = RANGES[regionProperty] ?? 100
 
     const fillLayer: LayerProps = useMemo(
         () => ({
             id: "regions-fill",
             type: "fill",
             paint: {
-                "fill-color": ["interpolate", ["linear"], ["get", dataProperty], 0, "#eff3ff", 10, "#bdc9e1", 25, "#74a9cf", 50, "#2171b5", 100, "#08306b"],
+                "fill-color": ["interpolate", ["linear"], ["get", regionProperty], 0, "#eff3ff", max * 0.1, "#bdc9e1", max * 0.25, "#74a9cf", max * 0.5, "#2171b5", max, "#08306b"],
                 "fill-opacity": 0.65,
             },
         }),
-        [dataProperty],
+        [regionProperty, max],
     )
 
     const outlineLayer: LayerProps = useMemo(

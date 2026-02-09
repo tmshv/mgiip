@@ -19,8 +19,17 @@ const fields: FieldKeys = {
     winRate: "доля побед",
 }
 
+const regionOptions = {
+    "количество городов-участников конкурса": "количество городов-участников конкурса",
+    "количество ОНП": "количество ОНП",
+    "итого подано заявок": "итого подано заявок",
+    победители: "победители",
+    байес: "байес",
+    "Оптимальность участия (доля побед)": "Оптимальность участия (доля побед)",
+}
+
 export default function App() {
-    const { label, regions } = useControls({
+    const { label, regions, regionParam } = useControls({
         label: {
             options: {
                 подавался: "подавался",
@@ -29,7 +38,11 @@ export default function App() {
             value: "победители",
         },
         regions: false,
+        regionParam: {
+            options: regionOptions,
+            value: "победители",
+        },
     })
 
-    return <AppMap labelProperty={label} showRegions={regions} fields={fields} />
+    return <AppMap labelProperty={label} showRegions={regions} regionProperty={regionParam} fields={fields} />
 }

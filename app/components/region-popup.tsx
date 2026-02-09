@@ -12,7 +12,7 @@ const style: React.CSSProperties = {
 }
 
 export type RegionPopupProps = {
-    labelProperty: string
+    regionProperty: string
 }
 
 const SKIP_KEYS = new Set(["name", "федеральный округ"])
@@ -29,11 +29,6 @@ type RegionData = {
     attributes: Attribute[]
 }
 
-const HIGHLIGHT_KEYS: Record<string, string> = {
-    подавался: "итого подано заявок",
-    победители: "победители",
-}
-
 function formatValue(value: unknown): string {
     if (typeof value === "number") {
         return Number.isInteger(value) ? String(value) : value.toFixed(2)
@@ -41,13 +36,12 @@ function formatValue(value: unknown): string {
     return String(value ?? "")
 }
 
-function useRegionData(properties: GeoJSON.GeoJsonProperties | null, labelProperty: string): RegionData | null {
+function useRegionData(properties: GeoJSON.GeoJsonProperties | null, regionProperty: string): RegionData | null {
     return useMemo(() => {
         if (!properties) {
             return null
         }
 
-        const highlightKey = HIGHLIGHT_KEYS[labelProperty]
         const attributes: Attribute[] = []
         for (const [key, value] of Object.entries(properties)) {
             if (SKIP_KEYS.has(key)) {
@@ -56,7 +50,7 @@ function useRegionData(properties: GeoJSON.GeoJsonProperties | null, labelProper
             attributes.push({
                 key,
                 value: formatValue(value),
-                highlight: key === highlightKey,
+                highlight: key === regionProperty,
             })
         }
 
@@ -65,13 +59,13 @@ function useRegionData(properties: GeoJSON.GeoJsonProperties | null, labelProper
             district: properties["федеральный округ"] ?? "",
             attributes,
         }
-    }, [properties, labelProperty])
+    }, [properties, regionProperty])
 }
 
-const RegionPopup: React.FC<RegionPopupProps> = ({ labelProperty }) => {
+const RegionPopup: React.FC<RegionPopupProps> = ({ regionProperty }) => {
     useMapPointer(REGION_LAYERS)
     const { feature, clear } = useMapHover(REGION_LAYERS, { followCursor: true })
-    const data = useRegionData(feature?.properties ?? null, labelProperty)
+    const data = useRegionData(feature?.properties ?? null, regionProperty)
 
     if (!feature || !data) {
         return null
