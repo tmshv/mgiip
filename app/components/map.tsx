@@ -8,6 +8,7 @@ import DatasetLayer from "./dataset-layer"
 import MapPopup from "./map-popup"
 import RegionLayer from "./region-layer"
 import RegionPopup from "./region-popup"
+import SearchOverlay from "./search-overlay"
 
 export type MapProps = {
     labelProperty: string
@@ -26,6 +27,10 @@ const AppMap: React.FC<MapProps> = ({ labelProperty, showRegions, regionProperty
     const clusterLayerIds = useMemo(() => Array.from({ length: DATASET_COUNT }, (_, i) => `clusters-${i + 1}`), [])
 
     const unclusteredPointLayerIds = useMemo(() => Array.from({ length: DATASET_COUNT }, (_, i) => `unclustered-point-${i + 1}`), [])
+
+    const handleSearchSelect = useCallback((coordinate: [number, number], zoom: number) => {
+        mapRef.current?.flyTo({ center: coordinate, zoom })
+    }, [])
 
     const handleClusterClick = useCallback(
         (e: MapMouseEvent) => {
@@ -79,6 +84,7 @@ const AppMap: React.FC<MapProps> = ({ labelProperty, showRegions, regionProperty
             projection={"mercator"}
             interactiveLayerIds={showRegions ? [] : clusterLayerIds}
         >
+            <SearchOverlay onSelect={handleSearchSelect} />
             {showRegions ? (
                 <>
                     <RegionLayer regionProperty={regionProperty} />

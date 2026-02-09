@@ -2,6 +2,7 @@ import "mapbox-gl/dist/mapbox-gl.css"
 import "~/styles/index.css"
 import "~/styles/mapbox.css"
 import "~/components/map-popup/styles.css"
+import "~/components/search-overlay/styles.css"
 
 import { useControls } from "leva"
 import AppMap from "~/components/map"
