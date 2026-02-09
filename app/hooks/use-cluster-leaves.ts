@@ -1,56 +1,51 @@
-import { useEffect, useState } from "react";
-import { useMap } from "react-map-gl/mapbox";
-import type { GeoJSONSource } from "mapbox-gl";
+import type { GeoJSONSource } from "mapbox-gl"
+import { useEffect, useState } from "react"
+import { useMap } from "react-map-gl/mapbox"
 
 export type ClusterLeaf = {
-    name: string;
-    type: string;
-    region: string;
-    population: number;
-};
+    name: string
+    type: string
+    region: string
+    population: number
+}
 
-const MAX_LEAVES = 10;
+const MAX_LEAVES = 10
 
 export type ClusterLeavesKeys = {
-    cityNameKey: string;
-    cityTypeKey: string;
-    regionKey: string;
-    populationKey: string;
-};
+    cityNameKey: string
+    cityTypeKey: string
+    regionKey: string
+    populationKey: string
+}
 
-export function useClusterLeaves(
-    source: string | null,
-    clusterId: number | null,
-    totalCount: number,
-    keys: ClusterLeavesKeys,
-): { leaves: ClusterLeaf[]; loading: boolean } {
-    const [leaves, setLeaves] = useState<ClusterLeaf[]>([]);
-    const [loading, setLoading] = useState(false);
-    const { current } = useMap();
+export function useClusterLeaves(source: string | null, clusterId: number | null, totalCount: number, keys: ClusterLeavesKeys): { leaves: ClusterLeaf[]; loading: boolean } {
+    const [leaves, setLeaves] = useState<ClusterLeaf[]>([])
+    const [loading, setLoading] = useState(false)
+    const { current } = useMap()
 
     useEffect(() => {
         if (!current || !source || clusterId === null) {
-            setLeaves([]);
-            setLoading(false);
-            return;
+            setLeaves([])
+            setLoading(false)
+            return
         }
 
-        let cancelled = false;
-        setLoading(true);
+        let cancelled = false
+        setLoading(true)
 
-        const map = current.getMap();
-        const src = map.getSource(source) as GeoJSONSource | undefined;
+        const map = current.getMap()
+        const src = map.getSource(source) as GeoJSONSource | undefined
         if (!src) {
-            setLoading(false);
-            return;
+            setLoading(false)
+            return
         }
 
         src.getClusterLeaves(clusterId, MAX_LEAVES, 0, (err, features) => {
-            if (cancelled) return;
+            if (cancelled) return
             if (err || !features) {
-                setLeaves([]);
-                setLoading(false);
-                return;
+                setLeaves([])
+                setLoading(false)
+                return
             }
 
             const result: ClusterLeaf[] = features
@@ -60,16 +55,16 @@ export function useClusterLeaves(
                     region: (f.properties?.[keys.regionKey] as string) ?? "",
                     population: Number(f.properties?.[keys.populationKey]) || 0,
                 }))
-                .sort((a, b) => b.population - a.population);
+                .sort((a, b) => b.population - a.population)
 
-            setLeaves(result);
-            setLoading(false);
-        });
+            setLeaves(result)
+            setLoading(false)
+        })
 
         return () => {
-            cancelled = true;
-        };
-    }, [current, source, clusterId, totalCount, keys.cityNameKey, keys.cityTypeKey, keys.regionKey, keys.populationKey]);
+            cancelled = true
+        }
+    }, [current, source, clusterId, totalCount, keys.cityNameKey, keys.cityTypeKey, keys.regionKey, keys.populationKey])
 
-    return { leaves, loading };
+    return { leaves, loading }
 }
