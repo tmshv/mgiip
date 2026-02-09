@@ -1,6 +1,6 @@
-import { useEffect, useRef } from "react";
-import { bbox } from "@turf/bbox";
-import type { LngLatBoundsLike } from "mapbox-gl";
+import { bbox } from "@turf/bbox"
+import type { LngLatBoundsLike } from "mapbox-gl"
+import { useEffect, useRef } from "react"
 
 function createMapById(features: GeoJSON.Feature[]) {
     return features.reduce((acc, feature) => {
@@ -17,13 +17,13 @@ function createMapBySlug(features: GeoJSON.Feature[]) {
 }
 
 export default function useProjectBounds(href: string) {
-    const data = useRef<Map<number|string, LngLatBoundsLike>>(new Map())
+    const data = useRef<Map<number | string, LngLatBoundsLike>>(new Map())
     useEffect(() => {
         const stop = new AbortController()
         fetch(href, {
             signal: stop.signal,
         })
-            .then(res => {
+            .then((res) => {
                 if (!res.ok) {
                     throw new Error("not ok")
                 }
@@ -32,11 +32,11 @@ export default function useProjectBounds(href: string) {
             .then((fc: GeoJSON.FeatureCollection) => {
                 data.current = createMapBySlug(fc.features)
             })
-            .catch(err => {
+            .catch((err) => {
                 if (err instanceof DOMException && err.name === "AbortError") {
-                    return;
+                    return
                 }
-                console.error("Failed to load project bounds:", err);
+                console.error("Failed to load project bounds:", err)
             })
         return () => {
             stop.abort()
@@ -47,4 +47,3 @@ export default function useProjectBounds(href: string) {
         return data.current.get(slug)
     }
 }
-

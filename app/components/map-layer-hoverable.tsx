@@ -1,36 +1,33 @@
-import { GeoJSONFeature, MapMouseEvent } from "mapbox-gl";
-import { useEffect, useState } from "react";
-import { LayerProps, useMap } from "react-map-gl/mapbox";
-import { Layer, Source } from "react-map-gl/mapbox";
-import useHover from "~/hooks/use-hover";
+import { GeoJSONFeature, MapMouseEvent } from "mapbox-gl"
+import { useEffect, useState } from "react"
+import { Layer, LayerProps, Source, useMap } from "react-map-gl/mapbox"
+import useHover from "~/hooks/use-hover"
 
 const layer: LayerProps = {
     id: "russia-states-border",
     type: "fill",
     paint: {
         "fill-color": "#ffffff",
-        "fill-opacity": [
-            "case",
-            ["boolean", ["feature-state", "hover"], false],
-            0.4,
-            0.0
-        ],
+        "fill-opacity": ["case", ["boolean", ["feature-state", "hover"], false], 0.4, 0.0],
     },
     maxzoom: 6,
-};
+}
 
 type Event = MapMouseEvent & {
     features?: GeoJSONFeature[]
 }
 
-export type MapLayerHoverableProps = {
-}
+export type MapLayerHoverableProps = {}
 
 const MapLayerHoverable: React.FC<MapLayerHoverableProps> = () => {
-    useHover("russia-states", "russia-states-border");
+    useHover("russia-states", "russia-states-border")
     const { current } = useMap()
 
-    const [state, setState] = useState<{ label: string, x: number, y: number } | null>(null)
+    const [state, setState] = useState<{
+        label: string
+        x: number
+        y: number
+    } | null>(null)
 
     useEffect(() => {
         const map = current?.getMap()
@@ -89,7 +86,7 @@ const MapLayerHoverable: React.FC<MapLayerHoverableProps> = () => {
                 </div>
             )}
         </>
-    );
+    )
 }
 
 export default MapLayerHoverable

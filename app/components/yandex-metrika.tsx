@@ -13,7 +13,7 @@ function script(account: number | string) {
 }
 
 export type YandexMetrikaProps = {
-    counter: number | string,
+    counter: number | string
     noscript?: false
 }
 
@@ -25,23 +25,17 @@ const YandexMetrika: React.FC<YandexMetrikaProps> = ({ counter, noscript = false
                     <img
                         src={`https://mc.yandex.ru/watch/${counter}`}
                         style={{
-                            position: 'absolute',
-                            left: '-9999px',
+                            position: "absolute",
+                            left: "-9999px",
                         }}
-                        alt={''}
+                        alt={""}
                     />
                 </div>
             </noscript>
         )
     }
 
-    return (
-        <script
-            type={'text/javascript'}
-            dangerouslySetInnerHTML={{ __html: script(counter) }}
-        />
-    )
+    return <script type={"text/javascript"} dangerouslySetInnerHTML={{ __html: script(counter) }} />
 }
 
 export default YandexMetrika
-

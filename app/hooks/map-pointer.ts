@@ -1,29 +1,29 @@
-import { useEffect } from "react";
-import { useMap } from "react-map-gl/mapbox";
+import { useEffect } from "react"
+import { useMap } from "react-map-gl/mapbox"
 
 export default function useMapPointer(layerIds: string[]) {
-    const { current } = useMap();
+    const { current } = useMap()
 
     useEffect(() => {
-        const map = current?.getMap();
+        const map = current?.getMap()
         if (!map) {
-            return;
+            return
         }
         const over = () => {
-            const element = map.getCanvasContainer();
-            element.style.cursor = "pointer";
+            const element = map.getCanvasContainer()
+            element.style.cursor = "pointer"
         }
         const out = () => {
-            const element = map.getCanvasContainer();
-            element.style.cursor = "default";
+            const element = map.getCanvasContainer()
+            element.style.cursor = "default"
         }
 
-        map.on("mouseover", layerIds, over);
-        map.on("mouseout", layerIds, out);
+        map.on("mouseover", layerIds, over)
+        map.on("mouseout", layerIds, out)
 
         return () => {
-            map.off("mouseover", layerIds, over);
-            map.off("mouseout", layerIds, out);
+            map.off("mouseover", layerIds, over)
+            map.off("mouseout", layerIds, out)
         }
-    }, [current, layerIds]);
+    }, [current, layerIds])
 }

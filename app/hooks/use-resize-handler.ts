@@ -25,10 +25,10 @@ export default function useResizeHandler(startWidth: number, transform: ResizeTr
                 return
             }
             // take right part and translate to %
-            const containerWidth = window.innerWidth;
-            let x = event.pageX;
-            let w = containerWidth - x;
-            let r = w / containerWidth;
+            const containerWidth = window.innerWidth
+            let x = event.pageX
+            let w = containerWidth - x
+            let r = w / containerWidth
             const width = transform(r)
             setWidth({
                 width,
@@ -36,8 +36,8 @@ export default function useResizeHandler(startWidth: number, transform: ResizeTr
             })
         }
 
-        const el = ref.current;
-        if (!el) return;
+        const el = ref.current
+        if (!el) return
 
         el.addEventListener("mousedown", down)
         document.addEventListener("mouseup", up, true)

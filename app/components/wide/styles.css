@@ -1,7 +1,7 @@
 .wide {
     /* position: relative; */
     width: 100%;
-    aspect-ratio: 16/10;
+    aspect-ratio: 16 / 10;
 }
 
 .wide-content {
@@ -9,4 +9,3 @@
     left: 0;
     right: 0;
 }
-

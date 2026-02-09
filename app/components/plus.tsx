@@ -1,6 +1,6 @@
 export type PlusProps = {
-    className?: string,
-    style?: React.CSSProperties,
+    className?: string
+    style?: React.CSSProperties
     color?: string
     size?: number
 }
@@ -12,5 +12,4 @@ const Plus: React.FC<PlusProps> = ({ className, style, size = 24, color = "#0000
     </svg>
 )
 
-export default Plus;
-
+export default Plus
