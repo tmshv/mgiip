@@ -31,6 +31,7 @@ npm run fix        # Auto-fix lint and formatting issues (biome check --write)
 - 89 GeoJSON dataset files in `/public` (`dataset1.geojson` through `dataset89.geojson`) contain settlement data
 - Each dataset is loaded as a separate clustered layer for performance
 - Data properties include: федеральный округ, регион, нп, тип, население, подавался, победители
+- **Dataset files in `/public` are read-only. Never modify them — adapt the code instead.**
 
 ### Key Components
 - `app/App.tsx` - Main app with leva controls for toggling label display mode

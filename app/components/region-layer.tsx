@@ -47,7 +47,7 @@ export default function RegionLayer({ regionProperty }: RegionLayerProps) {
             id: "regions-label",
             type: "symbol",
             layout: {
-                "text-field": ["get", "name"],
+                "text-field": ["get", "регион"],
                 "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
                 "text-size": 11,
             },
