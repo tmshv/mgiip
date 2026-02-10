@@ -35,7 +35,7 @@ const MapPopup: React.FC<MapPopupProps> = ({ layerNames, fields }) => {
             </h2>
             <div className="popup-location">
                 <div>{data.region}</div>
-                <div className="popup-location-district">{data.fedokrug}</div>
+                <div className="popup-location-district">{data.fedokrug} фо</div>
                 <div className="popup-population">{data.population} жителей</div>
             </div>
             <table className="properties-table">

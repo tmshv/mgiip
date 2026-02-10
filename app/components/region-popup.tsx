@@ -75,7 +75,7 @@ const RegionPopup: React.FC<RegionPopupProps> = ({ regionProperty }) => {
         <PopupWithStyle longitude={feature.coord[0]} latitude={feature.coord[1]} anchor="bottom" onClose={clear} closeButton={false} className={"my-popup"} style={style}>
             <h2 className="popup-header">{data.name}</h2>
             <div className="popup-location">
-                <div className="popup-location-district">{data.district}</div>
+                <div className="popup-location-district">{data.district} фо</div>
             </div>
             <table className="properties-table">
                 <tbody>
