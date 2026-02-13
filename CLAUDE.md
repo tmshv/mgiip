@@ -9,13 +9,15 @@ MGIIP Map - an interactive map application visualizing urban development grant d
 ## Development Commands
 
 ```bash
-npm install        # Install dependencies
-npm run dev        # Start dev server at http://localhost:5173
-npm run build      # Production build
-npm run preview    # Preview production build
-npm run typecheck  # Run TypeScript type checking
-npm run lint       # Lint and format check (biome check)
-npm run fix        # Auto-fix lint and formatting issues (biome check --write)
+npm install           # Install dependencies
+npm run dev           # Start dev server at http://localhost:5173
+npm run build         # Production build
+npm run preview       # Preview production build
+npm run typecheck     # Run TypeScript type checking
+npm run lint          # Lint and format check (biome check)
+npm run fix           # Auto-fix lint and formatting issues (biome check --write)
+npm run format-check  # Check formatting only (biome format)
+npm run test          # Run unit tests (vitest)
 ```
 
 ## Architecture
@@ -24,6 +26,7 @@ npm run fix        # Auto-fix lint and formatting issues (biome check --write)
 - Vite + React 18
 - react-map-gl/mapbox for map rendering
 - Biome for linting and formatting (replaces ESLint)
+- Vitest for unit testing
 - leva for debug controls (toggle between data display modes)
 - @turf/bbox for geographic calculations
 

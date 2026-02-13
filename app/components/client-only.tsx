@@ -9,7 +9,7 @@ const ClientOnly: React.FC<ClientOnlyProps> = ({ children }) => {
     useEffect(() => {
         setMounted(true)
     }, [])
-    return mounted ? <>{children}</> : null
+    return mounted ? children : null
 }
 
 export default ClientOnly

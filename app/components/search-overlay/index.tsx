@@ -49,6 +49,7 @@ export default function SearchOverlay({ onSelect }: SearchOverlayProps) {
         [results, activeIndex, selectItem],
     )
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: reset active index when results change
     useEffect(() => {
         setActiveIndex(-1)
     }, [results])

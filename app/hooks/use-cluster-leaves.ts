@@ -23,6 +23,7 @@ export function useClusterLeaves(source: string | null, clusterId: number | null
     const [loading, setLoading] = useState(false)
     const { current } = useMap()
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: totalCount triggers re-fetch when cluster composition changes
     useEffect(() => {
         if (!current || !source || clusterId === null) {
             setLeaves([])

@@ -52,7 +52,7 @@ const contests = [
     "дфо4",
 ]
 
-function buildAttributes(properties: Record<string, string>, excludedKeys: string[], applicationsKey: string, winnersKey: string, winRateKey: string): Attribute[] {
+export function buildAttributes(properties: Record<string, string>, excludedKeys: string[], applicationsKey: string, winnersKey: string, winRateKey: string): Attribute[] {
     const attributes: Attribute[] = []
 
     const podavalsya = properties[applicationsKey]
@@ -80,7 +80,7 @@ function buildAttributes(properties: Record<string, string>, excludedKeys: strin
         if (podacha != null || pobeda != null) {
             attributes.push({
                 key: contest,
-                value: `${pobeda} / ${podacha}`,
+                value: `${pobeda ?? "—"} / ${podacha ?? "—"}`,
             })
         }
     }

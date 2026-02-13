@@ -37,8 +37,8 @@ export function useSearchData() {
                                 result.push({ name, tag, coordinate: [coords[0], coords[1]], zoom: 6 })
                             }
                         } else {
-                            const name = feature.properties?.["нп"]
-                            const tag = feature.properties?.["регион"] ?? ""
+                            const name = feature.properties?.нп
+                            const tag = feature.properties?.регион ?? ""
                             if (name) {
                                 const key = `${name}|${tag}`
                                 if (!seen.has(key)) {

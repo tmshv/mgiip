@@ -5,7 +5,7 @@ export type AffinumOverlayProps = {
     style?: React.CSSProperties
 }
 
-const AffinumOverlay: React.FC<AffinumOverlayProps> = ({ className, style }) => (
+const AffinumOverlay: React.FC<AffinumOverlayProps> = (_props) => (
     <div
         style={{
             position: "absolute",

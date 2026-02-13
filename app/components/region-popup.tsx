@@ -55,7 +55,7 @@ function useRegionData(properties: GeoJSON.GeoJsonProperties | null, regionPrope
         }
 
         return {
-            name: properties["регион"] ?? "",
+            name: properties.регион ?? "",
             district: properties["федеральный округ"] ?? "",
             attributes,
         }
