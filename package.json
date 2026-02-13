@@ -9,6 +9,7 @@
         "typecheck": "tsc",
         "lint": "biome check app",
         "fix": "biome check --write app",
+        "format-check": "biome format app",
         "test": "echo \"No tests configured yet\" && exit 0"
     },
     "dependencies": {
