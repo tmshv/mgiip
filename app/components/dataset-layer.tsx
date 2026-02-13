@@ -48,6 +48,7 @@ export default function DatasetLayer({ id, labelProperty, cityNameKey, visible }
                 "text-field": ["get", "sum"],
                 "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
                 "text-size": 12,
+                "text-allow-overlap": true,
             },
         }),
         [id, visibility],
@@ -81,6 +82,7 @@ export default function DatasetLayer({ id, labelProperty, cityNameKey, visible }
                 "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
                 "text-size": 10,
                 "text-anchor": "center", // Center the text in the circle
+                "text-allow-overlap": true,
             },
             paint: {
                 "text-color": "#ffffff",
@@ -124,12 +126,12 @@ export default function DatasetLayer({ id, labelProperty, cityNameKey, visible }
             clusterProperties={clusterProperties}
         >
             <Layer {...clusterLayer} />
-            <Layer {...clusterCountLayer} />
             <Layer {...unclusteredPointLayer} />
-            {/* Text inside the circle */}
-            <Layer {...unclusteredPointValueLayer} />
             {/* Name label to the side */}
             <Layer {...unclusteredPointLabelLayer} />
+            {/* Numbers on top: cluster counts and point values */}
+            <Layer {...clusterCountLayer} />
+            <Layer {...unclusteredPointValueLayer} />
         </Source>
     )
 }
