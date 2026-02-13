@@ -1,5 +1,5 @@
 {
-    "$schema": "https://biomejs.dev/schemas/2.3.14/schema.json",
+    "$schema": "https://biomejs.dev/schemas/2.3.15/schema.json",
     "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
     "files": { "includes": ["**", "!!**/dist", "!!**/public"] },
     "formatter": { "enabled": true, "indentStyle": "space", "indentWidth": 4, "lineWidth": 180 },
@@ -16,6 +16,9 @@
             },
             "security": {
                 "noDangerouslySetInnerHtml": "off"
+            },
+            "complexity": {
+                "noImportantStyles": "off"
             }
         }
     },

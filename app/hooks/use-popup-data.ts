@@ -80,7 +80,7 @@ export function buildAttributes(properties: Record<string, string>, excludedKeys
         if (podacha != null || pobeda != null) {
             attributes.push({
                 key: contest,
-                value: `${pobeda} / ${podacha}`,
+                value: `${pobeda ?? "—"} / ${podacha ?? "—"}`,
             })
         }
     }

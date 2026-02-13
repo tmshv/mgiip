@@ -100,4 +100,26 @@ describe("buildAttributes", () => {
         const highlight = result.find((a) => a.key === "победил/подавался")
         expect(highlight).toBeUndefined()
     })
+
+    it("uses dash placeholder in contest entry when only подача is present", () => {
+        const properties = {
+            "2020_подача": "да",
+        }
+        const result = buildAttributes(properties, ["2020_подача"], "подавался", "победители", "доля побед")
+
+        const contest = result.find((a) => a.key === "2020")
+        expect(contest).toBeDefined()
+        expect(contest!.value).toBe("— / да")
+    })
+
+    it("uses dash placeholder in contest entry when only победа is present", () => {
+        const properties = {
+            "2020_победа": "нет",
+        }
+        const result = buildAttributes(properties, ["2020_победа"], "подавался", "победители", "доля побед")
+
+        const contest = result.find((a) => a.key === "2020")
+        expect(contest).toBeDefined()
+        expect(contest!.value).toBe("нет / —")
+    })
 })
