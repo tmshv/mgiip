@@ -6,9 +6,12 @@ export type DatasetLayerProps = {
     id: number
     labelProperty: string
     cityNameKey: string
+    visible: boolean
 }
 
-export default function DatasetLayer({ id, labelProperty, cityNameKey }: DatasetLayerProps) {
+export default function DatasetLayer({ id, labelProperty, cityNameKey, visible }: DatasetLayerProps) {
+    const visibility = visible ? "visible" : "none"
+
     const clusterProperties = useMemo(
         () => ({
             sum: ["+", ["get", labelProperty]],
@@ -21,6 +24,7 @@ export default function DatasetLayer({ id, labelProperty, cityNameKey }: Dataset
             id: `clusters-${id}`,
             type: "circle",
             filter: ["has", "point_count"],
+            layout: { visibility },
             paint: {
                 "circle-color": "#111111",
                 "circle-stroke-width": 2,
@@ -28,7 +32,7 @@ export default function DatasetLayer({ id, labelProperty, cityNameKey }: Dataset
                 "circle-radius": ["interpolate", ["linear"], ["get", "sum"], 0, 8, 10, 12, 50, 18, 100, 24, 500, 32, 1000, 40],
             },
         }),
-        [id],
+        [id, visibility],
     )
 
     const clusterCountLayer: LayerProps = useMemo(
@@ -40,12 +44,13 @@ export default function DatasetLayer({ id, labelProperty, cityNameKey }: Dataset
                 "text-color": "#ffffff",
             },
             layout: {
+                visibility,
                 "text-field": ["get", "sum"],
                 "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
                 "text-size": 12,
             },
         }),
-        [id],
+        [id, visibility],
     )
 
     const unclusteredPointLayer: LayerProps = useMemo(
@@ -53,6 +58,7 @@ export default function DatasetLayer({ id, labelProperty, cityNameKey }: Dataset
             id: `unclustered-point-${id}`,
             type: "circle",
             filter: ["!", ["has", "point_count"]],
+            layout: { visibility },
             paint: {
                 "circle-radius": 6,
                 "circle-color": "#111111",
@@ -60,7 +66,7 @@ export default function DatasetLayer({ id, labelProperty, cityNameKey }: Dataset
                 "circle-stroke-color": "#eeeeee",
             },
         }),
-        [id],
+        [id, visibility],
     )
 
     // Layer to display the property value as text inside the circle
@@ -70,6 +76,7 @@ export default function DatasetLayer({ id, labelProperty, cityNameKey }: Dataset
             type: "symbol",
             filter: ["!", ["has", "point_count"]],
             layout: {
+                visibility,
                 "text-field": ["get", labelProperty],
                 "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
                 "text-size": 10,
@@ -79,7 +86,7 @@ export default function DatasetLayer({ id, labelProperty, cityNameKey }: Dataset
                 "text-color": "#ffffff",
             },
         }),
-        [id, labelProperty],
+        [id, labelProperty, visibility],
     )
 
     // Original label layer to show the name to the side
@@ -89,9 +96,10 @@ export default function DatasetLayer({ id, labelProperty, cityNameKey }: Dataset
             type: "symbol",
             filter: ["!", ["has", "point_count"]],
             layout: {
+                visibility,
                 "text-field": ["get", cityNameKey],
                 "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
-                "text-size": 12,
+                "text-size": 14,
                 "text-anchor": "left",
                 "text-offset": [0.8, 0],
             },
@@ -101,7 +109,7 @@ export default function DatasetLayer({ id, labelProperty, cityNameKey }: Dataset
                 "text-halo-width": 1,
             },
         }),
-        [id, cityNameKey],
+        [id, cityNameKey, visibility],
     )
 
     return (

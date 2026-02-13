@@ -30,20 +30,21 @@ const regionOptions = {
 }
 
 export default function App() {
-    const { label, regions, regionParam } = useControls({
-        label: {
+    const { cityLabel, showCities, showRegions, regionParam } = useControls({
+        cityLabel: {
             options: {
                 подавался: "подавался",
                 победители: "победители",
             },
             value: "победители",
         },
-        regions: false,
+        showCities: true,
+        showRegions: false,
         regionParam: {
             options: regionOptions,
             value: "победители",
         },
     })
 
-    return <AppMap labelProperty={label} showRegions={regions} regionProperty={regionParam} fields={fields} />
+    return <AppMap cityLabelProperty={cityLabel} showCities={showCities} showRegions={showRegions} regionProperty={regionParam} fields={fields} />
 }

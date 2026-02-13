@@ -11,7 +11,8 @@ import RegionPopup from "./region-popup"
 import SearchOverlay from "./search-overlay"
 
 export type MapProps = {
-    labelProperty: string
+    cityLabelProperty: string
+    showCities: boolean
     showRegions: boolean
     regionProperty: string
     fields: FieldKeys
@@ -19,7 +20,7 @@ export type MapProps = {
 
 const DATASET_COUNT = 89
 
-const AppMap: React.FC<MapProps> = ({ labelProperty, showRegions, regionProperty, fields }: MapProps) => {
+const AppMap: React.FC<MapProps> = ({ cityLabelProperty, showCities, showRegions, regionProperty, fields }: MapProps) => {
     const mapboxAccessToken = import.meta.env.VITE_MAPBOX_ACCESS_KEY
     const mapStyle = import.meta.env.VITE_MAPBOX_STYLE
     const mapRef = useRef<MapRef>(null)
@@ -82,19 +83,16 @@ const AppMap: React.FC<MapProps> = ({ labelProperty, showRegions, regionProperty
             mapboxAccessToken={mapboxAccessToken}
             minZoom={2}
             projection={"mercator"}
-            interactiveLayerIds={showRegions ? [] : clusterLayerIds}
+            interactiveLayerIds={showCities ? clusterLayerIds : []}
         >
             <SearchOverlay onSelect={handleSearchSelect} />
-            {showRegions ? (
+            <RegionLayer regionProperty={regionProperty} visible={showRegions} />
+            {showRegions && <RegionPopup regionProperty={regionProperty} />}
+            {Array.from({ length: DATASET_COUNT }, (_, i) => i + 1).map((id) => (
+                <DatasetLayer key={id} id={id} labelProperty={cityLabelProperty} cityNameKey={fields.cityName} visible={showCities} />
+            ))}
+            {showCities && (
                 <>
-                    <RegionLayer regionProperty={regionProperty} />
-                    <RegionPopup regionProperty={regionProperty} />
-                </>
-            ) : (
-                <>
-                    {Array.from({ length: DATASET_COUNT }, (_, i) => i + 1).map((id) => (
-                        <DatasetLayer key={id} id={id} labelProperty={labelProperty} cityNameKey={fields.cityName} />
-                    ))}
                     <ClusterPopup layerNames={clusterLayerIds} fields={fields} />
                     <MapPopup layerNames={unclusteredPointLayerIds} fields={fields} />
                 </>
