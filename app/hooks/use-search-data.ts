@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import type { FieldKeys } from "~/types/fields"
 
 export type SearchItem = {
     name: string
@@ -9,7 +10,7 @@ export type SearchItem = {
 
 const DATASET_COUNT = 89
 
-export function useSearchData() {
+export function useSearchData(fields: FieldKeys) {
     const [items, setItems] = useState<SearchItem[]>([])
     const [loading, setLoading] = useState(true)
 
@@ -32,13 +33,13 @@ export function useSearchData() {
 
                         if (isRegion) {
                             const name = feature.properties?.name
-                            const tag = feature.properties?.["федеральный округ"] ?? ""
+                            const tag = feature.properties?.[fields.district] ?? ""
                             if (name) {
                                 result.push({ name, tag, coordinate: [coords[0], coords[1]], zoom: 6 })
                             }
                         } else {
-                            const name = feature.properties?.нп
-                            const tag = feature.properties?.регион ?? ""
+                            const name = feature.properties?.[fields.cityName]
+                            const tag = feature.properties?.[fields.region] ?? ""
                             if (name) {
                                 const key = `${name}|${tag}`
                                 if (!seen.has(key)) {
@@ -53,7 +54,7 @@ export function useSearchData() {
                 setItems(result)
             })
             .finally(() => setLoading(false))
-    }, [])
+    }, [fields])
 
     return { items, loading }
 }

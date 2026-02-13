@@ -13,10 +13,11 @@ const RANGES: Record<string, number> = {
 
 export type RegionLayerProps = {
     regionProperty: string
+    regionLabelKey: string
     visible: boolean
 }
 
-export default function RegionLayer({ regionProperty, visible }: RegionLayerProps) {
+export default function RegionLayer({ regionProperty, regionLabelKey, visible }: RegionLayerProps) {
     const max = RANGES[regionProperty] ?? 100
     const visibility = visible ? "visible" : "none"
 
@@ -52,7 +53,7 @@ export default function RegionLayer({ regionProperty, visible }: RegionLayerProp
             type: "symbol",
             layout: {
                 visibility,
-                "text-field": ["get", "регион"],
+                "text-field": ["get", regionLabelKey],
                 "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
                 "text-size": 11,
                 "text-transform": "uppercase",
@@ -63,7 +64,7 @@ export default function RegionLayer({ regionProperty, visible }: RegionLayerProp
                 "text-halo-width": 2,
             },
         }),
-        [visibility],
+        [visibility, regionLabelKey],
     )
 
     return (

@@ -3,6 +3,7 @@ export type FieldKeys = {
     cityType: string
     onp: string
     region: string
+    regionDistrict: string
     district: string
     population: string
     applications: string

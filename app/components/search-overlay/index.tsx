@@ -1,14 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import { useSearch } from "~/hooks/use-search"
 import { useSearchData } from "~/hooks/use-search-data"
+import type { FieldKeys } from "~/types/fields"
 import "./styles.css"
 
 export type SearchOverlayProps = {
+    fields: FieldKeys
     onSelect: (coordinate: [number, number], zoom: number) => void
 }
 
-export default function SearchOverlay({ onSelect }: SearchOverlayProps) {
-    const { items, loading } = useSearchData()
+export default function SearchOverlay({ fields, onSelect }: SearchOverlayProps) {
+    const { items, loading } = useSearchData(fields)
     const { query, setQuery, results } = useSearch(items)
     const [open, setOpen] = useState(false)
     const [activeIndex, setActiveIndex] = useState(-1)

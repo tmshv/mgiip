@@ -1,6 +1,7 @@
 import { useMemo } from "react"
 import useMapPointer from "~/hooks/map-pointer"
 import { useMapHover } from "~/hooks/use-map-hover"
+import type { FieldKeys } from "~/types/fields"
 import PopupWithStyle from "./map-popup/popup-with-style"
 
 import "./map-popup/styles.css"
@@ -12,11 +13,10 @@ const style: React.CSSProperties = {
 }
 
 export type RegionPopupProps = {
+    fields: FieldKeys
     regionProperty: string
     disabled?: boolean
 }
-
-const SKIP_KEYS = new Set(["регион", "фо"])
 
 type Attribute = {
     key: string
@@ -37,15 +37,16 @@ function formatValue(value: unknown): string {
     return String(value ?? "")
 }
 
-function useRegionData(properties: GeoJSON.GeoJsonProperties | null, regionProperty: string): RegionData | null {
+function useRegionData(properties: GeoJSON.GeoJsonProperties | null, regionProperty: string, fields: FieldKeys): RegionData | null {
     return useMemo(() => {
         if (!properties) {
             return null
         }
 
+        const skipKeys = new Set([fields.region, fields.regionDistrict])
         const attributes: Attribute[] = []
         for (const [key, value] of Object.entries(properties)) {
-            if (SKIP_KEYS.has(key)) {
+            if (skipKeys.has(key)) {
                 continue
             }
             attributes.push({
@@ -56,17 +57,17 @@ function useRegionData(properties: GeoJSON.GeoJsonProperties | null, regionPrope
         }
 
         return {
-            name: properties.регион ?? "",
-            district: properties["фо"] ?? "",
+            name: properties[fields.region] ?? "",
+            district: properties[fields.regionDistrict] ?? "",
             attributes,
         }
-    }, [properties, regionProperty])
+    }, [properties, regionProperty, fields])
 }
 
-const RegionPopup: React.FC<RegionPopupProps> = ({ regionProperty, disabled }) => {
+const RegionPopup: React.FC<RegionPopupProps> = ({ fields, regionProperty, disabled }) => {
     useMapPointer(REGION_LAYERS)
     const { feature, clear } = useMapHover(REGION_LAYERS, { followCursor: true })
-    const data = useRegionData(feature?.properties ?? null, regionProperty)
+    const data = useRegionData(feature?.properties ?? null, regionProperty, fields)
 
     if (disabled || !feature || !data) {
         return null

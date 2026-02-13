@@ -13,6 +13,7 @@ const fields: FieldKeys = {
     cityType: "тип",
     onp: "онп",
     region: "регион",
+    regionDistrict: "фо",
     district: "федеральный округ",
     population: "население",
     applications: "подавался",
