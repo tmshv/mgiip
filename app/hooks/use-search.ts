@@ -3,7 +3,7 @@ import type { SearchItem } from "~/hooks/use-search-data"
 
 const MAX_RESULTS = 15
 
-function fuzzyMatch(query: string, text: string): number | null {
+export function fuzzyMatch(query: string, text: string): number | null {
     const q = query.toLowerCase()
     const t = text.toLowerCase()
 
