@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from "react"
-import useResizeHandler, { ResizeTransform } from "~/hooks/use-resize-handler"
+import useResizeHandler, { type ResizeTransform } from "~/hooks/use-resize-handler"
 import styles from "./styles.css"
 
 function cssPercent(value: number): string {

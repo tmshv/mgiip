@@ -4,14 +4,14 @@ import { useEffect, useRef } from "react"
 
 function createMapById(features: GeoJSON.Feature[]) {
     return features.reduce((acc, feature) => {
-        acc.set(feature.properties!.id, bbox(feature) as LngLatBoundsLike)
+        acc.set(feature.properties?.id, bbox(feature) as LngLatBoundsLike)
         return acc
     }, new Map<number | string, LngLatBoundsLike>())
 }
 
 function createMapBySlug(features: GeoJSON.Feature[]) {
     return features.reduce((acc, feature) => {
-        acc.set(feature.properties!["slug"], bbox(feature) as LngLatBoundsLike)
+        acc.set(feature.properties?.slug, bbox(feature) as LngLatBoundsLike)
         return acc
     }, new Map<number | string, LngLatBoundsLike>())
 }

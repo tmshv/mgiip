@@ -10,7 +10,7 @@ export default function useHover(source: string, layerId: string) {
             return
         }
 
-        let hoveredStateId: string | number | undefined = undefined
+        let hoveredStateId: string | number | undefined
 
         const over = (event: mapboxgl.MapMouseEvent) => {
             if (event.features && event.features.length > 0) {
