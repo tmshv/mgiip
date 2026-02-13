@@ -16,7 +16,7 @@ export type RegionPopupProps = {
     disabled?: boolean
 }
 
-const SKIP_KEYS = new Set(["регион", "федеральный округ"])
+const SKIP_KEYS = new Set(["регион", "фо"])
 
 type Attribute = {
     key: string
@@ -57,7 +57,7 @@ function useRegionData(properties: GeoJSON.GeoJsonProperties | null, regionPrope
 
         return {
             name: properties.регион ?? "",
-            district: properties["федеральный округ"] ?? "",
+            district: properties["фо"] ?? "",
             attributes,
         }
     }, [properties, regionProperty])
