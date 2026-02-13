@@ -13,6 +13,7 @@ const style: React.CSSProperties = {
 
 export type RegionPopupProps = {
     regionProperty: string
+    disabled?: boolean
 }
 
 const SKIP_KEYS = new Set(["регион", "федеральный округ"])
@@ -62,12 +63,12 @@ function useRegionData(properties: GeoJSON.GeoJsonProperties | null, regionPrope
     }, [properties, regionProperty])
 }
 
-const RegionPopup: React.FC<RegionPopupProps> = ({ regionProperty }) => {
+const RegionPopup: React.FC<RegionPopupProps> = ({ regionProperty, disabled }) => {
     useMapPointer(REGION_LAYERS)
     const { feature, clear } = useMapHover(REGION_LAYERS, { followCursor: true })
     const data = useRegionData(feature?.properties ?? null, regionProperty)
 
-    if (!feature || !data) {
+    if (disabled || !feature || !data) {
         return null
     }
 

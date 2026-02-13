@@ -1,3 +1,4 @@
+import { useEffect } from "react"
 import useMapPointer from "~/hooks/map-pointer"
 import { useClusterLeaves } from "~/hooks/use-cluster-leaves"
 import { useClusterPopupData } from "~/hooks/use-cluster-popup-data"
@@ -10,6 +11,7 @@ import "./map-popup/styles.css"
 export type ClusterPopupProps = {
     layerNames: string[]
     fields: FieldKeys
+    onActiveChange?: (active: boolean) => void
 }
 
 function formatName(type: string, name: string): string {
@@ -17,7 +19,7 @@ function formatName(type: string, name: string): string {
     return `${type}. ${name}`
 }
 
-const ClusterPopup: React.FC<ClusterPopupProps> = ({ layerNames, fields }) => {
+const ClusterPopup: React.FC<ClusterPopupProps> = ({ layerNames, fields, onActiveChange }) => {
     useMapPointer(layerNames)
     const { feature, clear } = useMapHover(layerNames)
     const pointCount = (feature?.properties?.point_count as number) ?? 0
@@ -28,6 +30,12 @@ const ClusterPopup: React.FC<ClusterPopupProps> = ({ layerNames, fields }) => {
         populationKey: fields.population,
     })
     const data = useClusterPopupData(feature?.properties ?? null, leaves, loading)
+
+    const active = feature !== null
+    useEffect(() => {
+        onActiveChange?.(active)
+        return () => onActiveChange?.(false)
+    }, [active, onActiveChange])
 
     if (!feature || !data) {
         return null

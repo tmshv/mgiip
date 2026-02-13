@@ -1,5 +1,5 @@
 import type { GeoJSONFeature, GeoJSONSource } from "mapbox-gl"
-import { useCallback, useMemo, useRef } from "react"
+import { useCallback, useMemo, useRef, useState } from "react"
 import type { MapMouseEvent, MapRef } from "react-map-gl/mapbox"
 import { Map as MapGl } from "react-map-gl/mapbox"
 import type { FieldKeys } from "~/types/fields"
@@ -24,6 +24,9 @@ const AppMap: React.FC<MapProps> = ({ cityLabelProperty, showCities, showRegions
     const mapboxAccessToken = import.meta.env.VITE_MAPBOX_ACCESS_KEY
     const mapStyle = import.meta.env.VITE_MAPBOX_STYLE
     const mapRef = useRef<MapRef>(null)
+    const [mapPopupActive, setMapPopupActive] = useState(false)
+    const [clusterPopupActive, setClusterPopupActive] = useState(false)
+    const cityPopupActive = showCities && (mapPopupActive || clusterPopupActive)
 
     const clusterLayerIds = useMemo(() => Array.from({ length: DATASET_COUNT }, (_, i) => `clusters-${i + 1}`), [])
 
@@ -87,14 +90,14 @@ const AppMap: React.FC<MapProps> = ({ cityLabelProperty, showCities, showRegions
         >
             <SearchOverlay onSelect={handleSearchSelect} />
             <RegionLayer regionProperty={regionProperty} visible={showRegions} />
-            {showRegions && <RegionPopup regionProperty={regionProperty} />}
+            {showRegions && <RegionPopup regionProperty={regionProperty} disabled={cityPopupActive} />}
             {Array.from({ length: DATASET_COUNT }, (_, i) => i + 1).map((id) => (
                 <DatasetLayer key={id} id={id} labelProperty={cityLabelProperty} cityNameKey={fields.cityName} visible={showCities} />
             ))}
             {showCities && (
                 <>
-                    <ClusterPopup layerNames={clusterLayerIds} fields={fields} />
-                    <MapPopup layerNames={unclusteredPointLayerIds} fields={fields} />
+                    <ClusterPopup layerNames={clusterLayerIds} fields={fields} onActiveChange={setClusterPopupActive} />
+                    <MapPopup layerNames={unclusteredPointLayerIds} fields={fields} onActiveChange={setMapPopupActive} />
                 </>
             )}
         </MapGl>

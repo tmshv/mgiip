@@ -1,3 +1,4 @@
+import { useEffect } from "react"
 import useMapPointer from "~/hooks/map-pointer"
 import { useMapHover } from "~/hooks/use-map-hover"
 import { usePopupData } from "~/hooks/use-popup-data"
@@ -13,15 +14,22 @@ const style: React.CSSProperties = {
 export type MapPopupProps = {
     layerNames: string[]
     fields: FieldKeys
+    onActiveChange?: (active: boolean) => void
 }
 
-const MapPopup: React.FC<MapPopupProps> = ({ layerNames, fields }) => {
+const MapPopup: React.FC<MapPopupProps> = ({ layerNames, fields, onActiveChange }) => {
     useMapPointer(layerNames)
     const { feature, clear } = useMapHover(layerNames)
     const data = usePopupData({
         properties: feature?.properties ?? null,
         fields,
     })
+
+    const active = feature !== null
+    useEffect(() => {
+        onActiveChange?.(active)
+        return () => onActiveChange?.(false)
+    }, [active, onActiveChange])
 
     if (!feature || !data) {
         return null
