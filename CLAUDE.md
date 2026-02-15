@@ -31,16 +31,18 @@ npm run test          # Run unit tests (vitest)
 - @turf/bbox for geographic calculations
 
 ### Data Flow
-- 89 GeoJSON dataset files in `/public` (`dataset1.geojson` through `dataset89.geojson`) contain settlement data
-- Each dataset is loaded as a separate clustered layer for performance
+- Two dataset modes controlled via leva: **multi** (89 individual files `dataset1.geojson`–`dataset89.geojson`) and **single** (combined `/dataset.geojson`)
+- In multi mode each file is loaded as a separate clustered layer; in single mode one layer handles all data
+- `app/lib/datasets.ts` provides pure utilities (`getDatasets`, `getClusterLayerIds`, `getUnclusteredLayerIds`) for dataset configuration
 - Data properties include: федеральный округ, регион, нп, тип, население, подавался, победители
 - **Dataset files in `/public` are read-only. Never modify them — adapt the code instead.**
 
 ### Key Components
-- `app/App.tsx` - Main app with leva controls for toggling label display mode
-- `app/components/map.tsx` - Mapbox GL map with 89 dataset layers and clustering
-- `app/components/dataset-layer.tsx` - Individual GeoJSON layer with cluster/unclustered point rendering
-- `app/components/map-popup/` - Popup component showing settlement details on hover
+- `app/App.tsx` — Main app owning all specific parameters (constants, field mappings, config values) and leva controls for dataset mode, labels, and region display
+- `app/components/map.tsx` — Mapbox GL map; accepts dataset mode, count, and all config from App
+- `app/components/dataset-layer.tsx` — Individual GeoJSON layer with cluster/unclustered point rendering
+- `app/components/map-popup/` — Popup component showing settlement details on hover
+- `app/lib/datasets.ts` — Pure utilities for dataset mode logic; receives parameters, never hardcodes domain values
 
 ### Environment Variables
 Requires two Vite environment variables (prefix `VITE_`):
@@ -49,3 +51,8 @@ Requires two Vite environment variables (prefix `VITE_`):
 
 ### Path Aliases
 Use `~/` to import from `app/` directory (configured in tsconfig.json).
+
+## Design Rules
+
+- All specific parameters (constants like `DATASET_COUNT`, field mappings, config values) must live in `App.tsx`
+- Library/utility modules (`app/lib/`) must accept parameters — never hardcode domain-specific values

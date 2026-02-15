@@ -53,7 +53,7 @@ export default function App() {
             value: "победители",
         },
         showCities: true,
-        showRegions: false,
+        showRegions: true,
         regionParam: {
             options: regionOptions,
             value: "победители",
