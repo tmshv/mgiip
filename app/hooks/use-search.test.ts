@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest"
-import { fuzzyMatch } from "~/hooks/use-search"
+import { fuzzyMatch } from "~/lib/search"
 
 describe("fuzzyMatch", () => {
     it("returns null when query chars are not found in text", () => {

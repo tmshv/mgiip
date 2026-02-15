@@ -1,12 +1,8 @@
 import { useEffect, useState } from "react"
+import type { SearchItem } from "~/lib/search"
 import type { FieldKeys } from "~/types/fields"
 
-export type SearchItem = {
-    name: string
-    tag: string
-    coordinate: [number, number]
-    zoom: number
-}
+export type { SearchItem } from "~/lib/search"
 
 const DATASET_COUNT = 89
 
