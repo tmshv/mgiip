@@ -1,5 +1,5 @@
 import type { GeoJSONFeature, GeoJSONSource } from "mapbox-gl"
-import { useCallback, useMemo, useRef, useState } from "react"
+import { forwardRef, useCallback, useImperativeHandle, useMemo, useRef, useState } from "react"
 import type { MapMouseEvent, MapRef } from "react-map-gl/mapbox"
 import { Map as MapGl } from "react-map-gl/mapbox"
 import { useRegionRanges } from "~/hooks/use-region-ranges"
@@ -10,7 +10,6 @@ import DatasetLayer from "./dataset-layer"
 import MapPopup from "./map-popup"
 import RegionLayer from "./region-layer"
 import RegionPopup from "./region-popup"
-import SearchOverlay from "./search-overlay"
 
 export type MapProps = {
     datasetMode: DatasetMode
@@ -24,11 +23,12 @@ export type MapProps = {
     precision: number
 }
 
-const AppMap: React.FC<MapProps> = ({ datasetMode, datasetCount, cityLabelProperty, showCities, showRegions, regionProperty, fields, percentKeys, precision }: MapProps) => {
+const AppMap = forwardRef<MapRef, MapProps>(({ datasetMode, datasetCount, cityLabelProperty, showCities, showRegions, regionProperty, fields, percentKeys, precision }, ref) => {
     const regionRanges = useRegionRanges("/dataset-regions.geojson")
     const mapboxAccessToken = import.meta.env.VITE_MAPBOX_ACCESS_KEY
     const mapStyle = import.meta.env.VITE_MAPBOX_STYLE
     const mapRef = useRef<MapRef>(null)
+    useImperativeHandle(ref, () => mapRef.current as MapRef)
     const [mapPopupActive, setMapPopupActive] = useState(false)
     const [clusterPopupActive, setClusterPopupActive] = useState(false)
     const cityPopupActive = showCities && (mapPopupActive || clusterPopupActive)
@@ -36,10 +36,6 @@ const AppMap: React.FC<MapProps> = ({ datasetMode, datasetCount, cityLabelProper
     const datasets = useMemo(() => getDatasets(datasetMode, datasetCount), [datasetMode, datasetCount])
     const clusterLayerIds = useMemo(() => getClusterLayerIds(datasetMode, datasetCount), [datasetMode, datasetCount])
     const unclusteredPointLayerIds = useMemo(() => getUnclusteredLayerIds(datasetMode, datasetCount), [datasetMode, datasetCount])
-
-    const handleSearchSelect = useCallback((coordinate: [number, number], zoom: number) => {
-        mapRef.current?.flyTo({ center: coordinate, zoom })
-    }, [])
 
     const handleClusterClick = useCallback(
         (e: MapMouseEvent) => {
@@ -93,7 +89,6 @@ const AppMap: React.FC<MapProps> = ({ datasetMode, datasetCount, cityLabelProper
             projection={"mercator"}
             interactiveLayerIds={showCities ? clusterLayerIds : []}
         >
-            <SearchOverlay fields={fields} datasetCount={datasetCount} onSelect={handleSearchSelect} />
             <RegionLayer regionProperty={regionProperty} regionLabelKey={fields.region} visible={showRegions} ranges={regionRanges} />
             {showRegions && <RegionPopup fields={fields} regionProperty={regionProperty} percentKeys={percentKeys} precision={precision} disabled={cityPopupActive} />}
             {datasets.map((ds) => (
@@ -107,6 +102,6 @@ const AppMap: React.FC<MapProps> = ({ datasetMode, datasetCount, cityLabelProper
             )}
         </MapGl>
     )
-}
+})
 
 export default AppMap

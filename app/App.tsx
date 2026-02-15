@@ -2,13 +2,13 @@ import "mapbox-gl/dist/mapbox-gl.css"
 import "~/styles/index.css"
 import "~/styles/mapbox.css"
 import "~/components/map-popup/styles.css"
-import "~/components/search-overlay/styles.css"
 import "~/components/header/styles.css"
 
 import { Leva, useControls } from "leva"
+import { useCallback, useRef } from "react"
+import type { MapRef } from "react-map-gl/mapbox"
 import Header from "~/components/header"
 import AppMap from "~/components/map"
-import type { DatasetMode } from "~/lib/datasets"
 import type { FieldKeys } from "~/types/fields"
 
 const fields: FieldKeys = {
@@ -40,7 +40,7 @@ const regionOptions = {
 }
 
 export default function App() {
-    const { cityLabel, showCities, showRegions, regionParam } = useControls({
+    const { city_param: cityParam, city: showCities, region: showRegions, region_param: regionParam } = useControls({
         // : {
         //     options: {
         //         single: "single",
@@ -48,40 +48,44 @@ export default function App() {
         //     } satisfies Record<string, DatasetMode>,
         //     value: "multi" as DatasetMode,
         // },
-        cityLabel: {
+        city: true,
+        city_param: {
             options: {
                 подавался: "подавался",
                 победители: "победители",
             },
             value: "победители",
         },
-        showCities: true,
-        showRegions: true,
-        regionParam: {
+        region: true,
+        region_param: {
             options: regionOptions,
             value: "победители",
         },
     })
     const precision = 2
     const datasetMode = "multi"
+    const mapRef = useRef<MapRef>(null)
+
+    const handleSearchSelect = useCallback((coordinate: [number, number], zoom: number) => {
+        mapRef.current?.flyTo({ center: coordinate, zoom })
+    }, [])
 
     return (
         <>
-            <Leva titleBar={{ position: { x: -10, y: 46 } }} />
-            <Header />
-            <div style={{ flex: 1, minHeight: 0 }}>
-                <AppMap
-                    datasetMode={datasetMode}
-                    datasetCount={DATASET_COUNT}
-                    cityLabelProperty={cityLabel}
-                    showCities={showCities}
-                    showRegions={showRegions}
-                    regionProperty={regionParam}
-                    fields={fields}
-                    percentKeys={percentKeys}
-                    precision={precision}
-                />
-            </div>
+            <Leva titleBar={{ position: { x: 0, y: 46 } }} />
+            <AppMap
+                ref={mapRef}
+                datasetMode={datasetMode}
+                datasetCount={DATASET_COUNT}
+                cityLabelProperty={cityParam}
+                showCities={showCities}
+                showRegions={showRegions}
+                regionProperty={regionParam}
+                fields={fields}
+                percentKeys={percentKeys}
+                precision={precision}
+            />
+            <Header fields={fields} datasetCount={DATASET_COUNT} onSearchSelect={handleSearchSelect} />
         </>
     )
 }
