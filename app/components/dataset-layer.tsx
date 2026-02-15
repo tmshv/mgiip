@@ -27,7 +27,7 @@ export default function DatasetLayer({ id, dataUrl, labelProperty, cityNameKey, 
             filter: ["has", "point_count"],
             layout: { visibility },
             paint: {
-                "circle-color": "#111111",
+                "circle-color": "#333333",
                 "circle-stroke-width": 2,
                 "circle-stroke-color": "#eeeeee",
                 "circle-radius": ["interpolate", ["linear"], ["get", "sum"], 0, 8, 10, 12, 50, 18, 100, 24, 500, 32, 1000, 40],
@@ -62,13 +62,13 @@ export default function DatasetLayer({ id, dataUrl, labelProperty, cityNameKey, 
             filter: ["!", ["has", "point_count"]],
             layout: { visibility },
             paint: {
-                "circle-radius": 6,
+                "circle-radius": ["interpolate", ["linear"], ["get", labelProperty], 0, 6, 20, 46],
                 "circle-color": "#111111",
                 "circle-stroke-width": 2,
                 "circle-stroke-color": "#eeeeee",
             },
         }),
-        [id, visibility],
+        [id, labelProperty, visibility],
     )
 
     // Layer to display the property value as text inside the circle
@@ -104,7 +104,7 @@ export default function DatasetLayer({ id, dataUrl, labelProperty, cityNameKey, 
                 "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
                 "text-size": 14,
                 "text-anchor": "left",
-                "text-offset": [0.8, 0],
+                "text-offset": ["interpolate", ["linear"], ["get", labelProperty], 0, ["literal", [0.8, 0]], 20, ["literal", [3.6, 0]]],
             },
             paint: {
                 "text-color": "#333333",
@@ -112,7 +112,7 @@ export default function DatasetLayer({ id, dataUrl, labelProperty, cityNameKey, 
                 "text-halo-width": 1,
             },
         }),
-        [id, cityNameKey, visibility],
+        [id, labelProperty, cityNameKey, visibility],
     )
 
     return (
