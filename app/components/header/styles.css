@@ -6,6 +6,7 @@
     z-index: 1;
     padding: 10px;
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: 10px;
     pointer-events: none;
@@ -27,4 +28,18 @@
     margin: 0;
     font-size: 14px;
     font-weight: 400;
+}
+
+.header-title--short {
+    display: none;
+}
+
+@media (max-width: 600px) {
+    .header-title--full {
+        display: none;
+    }
+
+    .header-title--short {
+        display: block;
+    }
 }
