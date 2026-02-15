@@ -12,7 +12,7 @@ export default function Header({ fields, datasetCount, onSearchSelect }: HeaderP
     return (
         <header className="header">
             <div className="header-brand">
-                <Logo width={166} height={10} fill="black" />
+                <Logo width={166} height={10} fill="white" />
                 <h1 className="header-title header-title--full">Статистика конкурса МГиИП 2018-2025</h1>
                 <h1 className="header-title header-title--short">МГиИП</h1>
             </div>
