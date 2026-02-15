@@ -32,8 +32,8 @@ export function useSearchData(fields: FieldKeys) {
                         if (!coords) continue
 
                         if (isRegion) {
-                            const name = feature.properties?.name
-                            const tag = feature.properties?.[fields.district] ?? ""
+                            const name = feature.properties?.[fields.region]
+                            const tag = feature.properties?.[fields.regionDistrict] ?? ""
                             if (name) {
                                 result.push({ name, tag, coordinate: [coords[0], coords[1]], zoom: 6 })
                             }
