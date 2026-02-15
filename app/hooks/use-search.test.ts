@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest"
-import { fuzzyMatch } from "~/lib/search"
+import { type SearchItem, fuzzyMatch, searchItems } from "~/lib/search"
 
 describe("fuzzyMatch", () => {
     it("returns null when query chars are not found in text", () => {
@@ -62,5 +62,42 @@ describe("fuzzyMatch", () => {
     it("handles both empty query and empty text", () => {
         const score = fuzzyMatch("", "")
         expect(score).not.toBeNull()
+    })
+})
+
+function makeItem(name: string): SearchItem {
+    return { name, tag: "", coordinate: [0, 0], zoom: 10 }
+}
+
+describe("searchItems", () => {
+    it("returns empty array for empty query", () => {
+        const items = [makeItem("Москва"), makeItem("Минск")]
+        expect(searchItems(items, "", 15)).toEqual([])
+        expect(searchItems(items, "   ", 15)).toEqual([])
+    })
+
+    it("returns at most maxResults items", () => {
+        const items = Array.from({ length: 50 }, (_, i) => makeItem(`a${i}`))
+        const result = searchItems(items, "a", 5)
+        expect(result.length).toBe(5)
+    })
+
+    it("results are sorted by score descending (prefix match ranks higher)", () => {
+        const items = [makeItem("xabc"), makeItem("abc"), makeItem("xxabc")]
+        const result = searchItems(items, "abc", 15)
+        // "abc" is a prefix match, should rank first
+        expect(result[0].name).toBe("abc")
+    })
+
+    it("tiebreaker is alphabetical by name", () => {
+        // Items with identical length and structure get the same score
+        const items = [makeItem("cc"), makeItem("aa"), makeItem("bb")]
+        const result = searchItems(items, "c", 15)
+        // Only "cc" matches "c", so test with items that all match equally
+        const items2 = [makeItem("cb"), makeItem("ca"), makeItem("cc")]
+        const result2 = searchItems(items2, "c", 15)
+        expect(result2[0].name).toBe("ca")
+        expect(result2[1].name).toBe("cb")
+        expect(result2[2].name).toBe("cc")
     })
 })

@@ -48,19 +48,31 @@ export function searchItems(items: SearchItem[], query: string, maxResults: numb
     const q = query.trim()
     if (!q) return []
 
-    const scored: { item: SearchItem; score: number }[] = []
+    const top: { item: SearchItem; score: number }[] = []
+    let minScore = -Infinity
 
     for (const item of items) {
         const score = fuzzyMatch(q, item.name)
-        if (score !== null) {
-            scored.push({ item, score })
+        if (score === null) continue
+        if (top.length >= maxResults && score < minScore) continue
+
+        // Find insertion index via linear scan (top is sorted desc by score, then asc by name)
+        let idx = top.length
+        for (let i = 0; i < top.length; i++) {
+            if (score > top[i].score || (score === top[i].score && item.name.localeCompare(top[i].item.name) < 0)) {
+                idx = i
+                break
+            }
         }
+
+        top.splice(idx, 0, { item, score })
+
+        if (top.length > maxResults) {
+            top.length = maxResults
+        }
+
+        minScore = top[top.length - 1].score
     }
 
-    scored.sort((a, b) => {
-        if (b.score !== a.score) return b.score - a.score
-        return a.item.name.localeCompare(b.item.name)
-    })
-
-    return scored.slice(0, maxResults).map((s) => s.item)
+    return top.map((s) => s.item)
 }
