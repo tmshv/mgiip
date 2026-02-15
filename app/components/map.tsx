@@ -17,11 +17,12 @@ export type MapProps = {
     regionProperty: string
     fields: FieldKeys
     percentKeys: Set<string>
+    precision: number
 }
 
 const DATASET_COUNT = 89
 
-const AppMap: React.FC<MapProps> = ({ cityLabelProperty, showCities, showRegions, regionProperty, fields, percentKeys }: MapProps) => {
+const AppMap: React.FC<MapProps> = ({ cityLabelProperty, showCities, showRegions, regionProperty, fields, percentKeys, precision }: MapProps) => {
     const mapboxAccessToken = import.meta.env.VITE_MAPBOX_ACCESS_KEY
     const mapStyle = import.meta.env.VITE_MAPBOX_STYLE
     const mapRef = useRef<MapRef>(null)
@@ -91,7 +92,7 @@ const AppMap: React.FC<MapProps> = ({ cityLabelProperty, showCities, showRegions
         >
             <SearchOverlay fields={fields} onSelect={handleSearchSelect} />
             <RegionLayer regionProperty={regionProperty} regionLabelKey={fields.region} visible={showRegions} />
-            {showRegions && <RegionPopup fields={fields} regionProperty={regionProperty} percentKeys={percentKeys} disabled={cityPopupActive} />}
+            {showRegions && <RegionPopup fields={fields} regionProperty={regionProperty} percentKeys={percentKeys} precision={precision} disabled={cityPopupActive} />}
             {Array.from({ length: DATASET_COUNT }, (_, i) => i + 1).map((id) => (
                 <DatasetLayer key={id} id={id} labelProperty={cityLabelProperty} cityNameKey={fields.cityName} visible={showCities} />
             ))}

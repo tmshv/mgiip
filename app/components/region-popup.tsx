@@ -16,6 +16,7 @@ export type RegionPopupProps = {
     fields: FieldKeys
     regionProperty: string
     percentKeys?: Set<string>
+    precision?: number
     disabled?: boolean
 }
 
@@ -31,17 +32,17 @@ type RegionData = {
     attributes: Attribute[]
 }
 
-function formatValue(key: string, value: unknown, percentKeys?: Set<string>): string {
+function formatValue(key: string, value: unknown, percentKeys?: Set<string>, precision = 1): string {
     if (typeof value === "number") {
         if (percentKeys?.has(key)) {
-            return `${(value * 100).toFixed(1)}%`
+            return `${(value * 100).toFixed(precision)}%`
         }
-        return Number.isInteger(value) ? String(value) : value.toFixed(2)
+        return Number.isInteger(value) ? String(value) : value.toFixed(precision)
     }
     return String(value ?? "")
 }
 
-function useRegionData(properties: GeoJSON.GeoJsonProperties | null, regionProperty: string, fields: FieldKeys, percentKeys?: Set<string>): RegionData | null {
+function useRegionData(properties: GeoJSON.GeoJsonProperties | null, regionProperty: string, fields: FieldKeys, percentKeys?: Set<string>, precision?: number): RegionData | null {
     return useMemo(() => {
         if (!properties) {
             return null
@@ -55,7 +56,7 @@ function useRegionData(properties: GeoJSON.GeoJsonProperties | null, regionPrope
             }
             attributes.push({
                 key,
-                value: formatValue(key, value, percentKeys),
+                value: formatValue(key, value, percentKeys, precision),
                 highlight: key === regionProperty,
             })
         }
@@ -65,13 +66,13 @@ function useRegionData(properties: GeoJSON.GeoJsonProperties | null, regionPrope
             district: properties[fields.regionDistrict] ?? "",
             attributes,
         }
-    }, [properties, regionProperty, fields, percentKeys])
+    }, [properties, regionProperty, fields, percentKeys, precision])
 }
 
-const RegionPopup: React.FC<RegionPopupProps> = ({ fields, regionProperty, percentKeys, disabled }) => {
+const RegionPopup: React.FC<RegionPopupProps> = ({ fields, regionProperty, percentKeys, precision, disabled }) => {
     useMapPointer(REGION_LAYERS)
     const { feature, clear } = useMapHover(REGION_LAYERS, { followCursor: true })
-    const data = useRegionData(feature?.properties ?? null, regionProperty, fields, percentKeys)
+    const data = useRegionData(feature?.properties ?? null, regionProperty, fields, percentKeys, precision)
 
     if (disabled || !feature || !data) {
         return null

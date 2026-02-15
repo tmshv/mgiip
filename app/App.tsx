@@ -48,6 +48,17 @@ export default function App() {
             value: "победители",
         },
     })
+    const precision = 2
 
-    return <AppMap cityLabelProperty={cityLabel} showCities={showCities} showRegions={showRegions} regionProperty={regionParam} fields={fields} percentKeys={percentKeys} />
+    return (
+        <AppMap
+            cityLabelProperty={cityLabel}
+            showCities={showCities}
+            showRegions={showRegions}
+            regionProperty={regionParam}
+            fields={fields}
+            percentKeys={percentKeys}
+            precision={precision}
+        />
+    )
 }
