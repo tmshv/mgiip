@@ -93,7 +93,7 @@ const AppMap: React.FC<MapProps> = ({ datasetMode, datasetCount, cityLabelProper
             projection={"mercator"}
             interactiveLayerIds={showCities ? clusterLayerIds : []}
         >
-            <SearchOverlay fields={fields} onSelect={handleSearchSelect} />
+            <SearchOverlay fields={fields} datasetCount={datasetCount} onSelect={handleSearchSelect} />
             <RegionLayer regionProperty={regionProperty} regionLabelKey={fields.region} visible={showRegions} ranges={regionRanges} />
             {showRegions && <RegionPopup fields={fields} regionProperty={regionProperty} percentKeys={percentKeys} precision={precision} disabled={cityPopupActive} />}
             {datasets.map((ds) => (
