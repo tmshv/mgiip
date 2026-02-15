@@ -2,6 +2,7 @@ import type { GeoJSONFeature, GeoJSONSource } from "mapbox-gl"
 import { useCallback, useMemo, useRef, useState } from "react"
 import type { MapMouseEvent, MapRef } from "react-map-gl/mapbox"
 import { Map as MapGl } from "react-map-gl/mapbox"
+import { useRegionRanges } from "~/hooks/use-region-ranges"
 import type { FieldKeys } from "~/types/fields"
 import ClusterPopup from "./cluster-popup"
 import DatasetLayer from "./dataset-layer"
@@ -23,6 +24,7 @@ export type MapProps = {
 const DATASET_COUNT = 89
 
 const AppMap: React.FC<MapProps> = ({ cityLabelProperty, showCities, showRegions, regionProperty, fields, percentKeys, precision }: MapProps) => {
+    const regionRanges = useRegionRanges("/dataset-regions.geojson")
     const mapboxAccessToken = import.meta.env.VITE_MAPBOX_ACCESS_KEY
     const mapStyle = import.meta.env.VITE_MAPBOX_STYLE
     const mapRef = useRef<MapRef>(null)
@@ -91,7 +93,7 @@ const AppMap: React.FC<MapProps> = ({ cityLabelProperty, showCities, showRegions
             interactiveLayerIds={showCities ? clusterLayerIds : []}
         >
             <SearchOverlay fields={fields} onSelect={handleSearchSelect} />
-            <RegionLayer regionProperty={regionProperty} regionLabelKey={fields.region} visible={showRegions} />
+            <RegionLayer regionProperty={regionProperty} regionLabelKey={fields.region} visible={showRegions} ranges={regionRanges} />
             {showRegions && <RegionPopup fields={fields} regionProperty={regionProperty} percentKeys={percentKeys} precision={precision} disabled={cityPopupActive} />}
             {Array.from({ length: DATASET_COUNT }, (_, i) => i + 1).map((id) => (
                 <DatasetLayer key={id} id={id} labelProperty={cityLabelProperty} cityNameKey={fields.cityName} visible={showCities} />

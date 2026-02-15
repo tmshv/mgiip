@@ -2,23 +2,15 @@ import { useMemo } from "react"
 import type { LayerProps } from "react-map-gl/mapbox"
 import { Layer, Source } from "react-map-gl/mapbox"
 
-const RANGES: Record<string, number> = {
-    "количество городов-участников конкурса": 75,
-    "количество ОНП": 65,
-    "итого подано заявок": 115,
-    победители: 55,
-    байес: 75,
-    "Оптимальность участия (доля побед)": 100,
-}
-
 export type RegionLayerProps = {
     regionProperty: string
     regionLabelKey: string
     visible: boolean
+    ranges: Record<string, number> | null
 }
 
-export default function RegionLayer({ regionProperty, regionLabelKey, visible }: RegionLayerProps) {
-    const max = RANGES[regionProperty] ?? 100
+export default function RegionLayer({ regionProperty, regionLabelKey, visible, ranges }: RegionLayerProps) {
+    const max = ranges?.[regionProperty] ?? 1
     const visibility = visible ? "visible" : "none"
 
     const fillLayer: LayerProps = useMemo(
