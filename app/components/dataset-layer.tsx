@@ -3,13 +3,14 @@ import type { LayerProps } from "react-map-gl/mapbox"
 import { Layer, Source } from "react-map-gl/mapbox"
 
 export type DatasetLayerProps = {
-    id: number
+    id: string
+    dataUrl: string
     labelProperty: string
     cityNameKey: string
     visible: boolean
 }
 
-export default function DatasetLayer({ id, labelProperty, cityNameKey, visible }: DatasetLayerProps) {
+export default function DatasetLayer({ id, dataUrl, labelProperty, cityNameKey, visible }: DatasetLayerProps) {
     const visibility = visible ? "visible" : "none"
 
     const clusterProperties = useMemo(
@@ -119,7 +120,7 @@ export default function DatasetLayer({ id, labelProperty, cityNameKey, visible }
             key={`dataset-${id}-${labelProperty}`} // Add key to force re-render when labelProperty changes
             id={`dataset-${id}`}
             type="geojson"
-            data={`/dataset${id}.geojson`}
+            data={dataUrl}
             cluster={true}
             clusterMaxZoom={14}
             clusterRadius={50}

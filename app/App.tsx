@@ -6,6 +6,7 @@ import "~/components/search-overlay/styles.css"
 
 import { useControls } from "leva"
 import AppMap from "~/components/map"
+import type { DatasetMode } from "~/lib/datasets"
 import type { FieldKeys } from "~/types/fields"
 
 const fields: FieldKeys = {
@@ -21,6 +22,8 @@ const fields: FieldKeys = {
     winRate: "доля побед",
 }
 
+const DATASET_COUNT = 89
+
 const percentKeys = new Set(["доля побед", "эффективность"])
 
 const regionOptions = {
@@ -33,7 +36,14 @@ const regionOptions = {
 }
 
 export default function App() {
-    const { cityLabel, showCities, showRegions, regionParam } = useControls({
+    const { datasetMode, cityLabel, showCities, showRegions, regionParam } = useControls({
+        datasetMode: {
+            options: {
+                single: "single",
+                multi: "multi",
+            } satisfies Record<string, DatasetMode>,
+            value: "multi" as DatasetMode,
+        },
         cityLabel: {
             options: {
                 подавался: "подавался",
@@ -52,6 +62,8 @@ export default function App() {
 
     return (
         <AppMap
+            datasetMode={datasetMode}
+            datasetCount={DATASET_COUNT}
             cityLabelProperty={cityLabel}
             showCities={showCities}
             showRegions={showRegions}

@@ -3,6 +3,7 @@ import { useCallback, useMemo, useRef, useState } from "react"
 import type { MapMouseEvent, MapRef } from "react-map-gl/mapbox"
 import { Map as MapGl } from "react-map-gl/mapbox"
 import { useRegionRanges } from "~/hooks/use-region-ranges"
+import { type DatasetMode, getClusterLayerIds, getDatasets, getUnclusteredLayerIds } from "~/lib/datasets"
 import type { FieldKeys } from "~/types/fields"
 import ClusterPopup from "./cluster-popup"
 import DatasetLayer from "./dataset-layer"
@@ -12,6 +13,8 @@ import RegionPopup from "./region-popup"
 import SearchOverlay from "./search-overlay"
 
 export type MapProps = {
+    datasetMode: DatasetMode
+    datasetCount: number
     cityLabelProperty: string
     showCities: boolean
     showRegions: boolean
@@ -21,9 +24,7 @@ export type MapProps = {
     precision: number
 }
 
-const DATASET_COUNT = 89
-
-const AppMap: React.FC<MapProps> = ({ cityLabelProperty, showCities, showRegions, regionProperty, fields, percentKeys, precision }: MapProps) => {
+const AppMap: React.FC<MapProps> = ({ datasetMode, datasetCount, cityLabelProperty, showCities, showRegions, regionProperty, fields, percentKeys, precision }: MapProps) => {
     const regionRanges = useRegionRanges("/dataset-regions.geojson")
     const mapboxAccessToken = import.meta.env.VITE_MAPBOX_ACCESS_KEY
     const mapStyle = import.meta.env.VITE_MAPBOX_STYLE
@@ -32,9 +33,9 @@ const AppMap: React.FC<MapProps> = ({ cityLabelProperty, showCities, showRegions
     const [clusterPopupActive, setClusterPopupActive] = useState(false)
     const cityPopupActive = showCities && (mapPopupActive || clusterPopupActive)
 
-    const clusterLayerIds = useMemo(() => Array.from({ length: DATASET_COUNT }, (_, i) => `clusters-${i + 1}`), [])
-
-    const unclusteredPointLayerIds = useMemo(() => Array.from({ length: DATASET_COUNT }, (_, i) => `unclustered-point-${i + 1}`), [])
+    const datasets = useMemo(() => getDatasets(datasetMode, datasetCount), [datasetMode, datasetCount])
+    const clusterLayerIds = useMemo(() => getClusterLayerIds(datasetMode, datasetCount), [datasetMode, datasetCount])
+    const unclusteredPointLayerIds = useMemo(() => getUnclusteredLayerIds(datasetMode, datasetCount), [datasetMode, datasetCount])
 
     const handleSearchSelect = useCallback((coordinate: [number, number], zoom: number) => {
         mapRef.current?.flyTo({ center: coordinate, zoom })
@@ -95,8 +96,8 @@ const AppMap: React.FC<MapProps> = ({ cityLabelProperty, showCities, showRegions
             <SearchOverlay fields={fields} onSelect={handleSearchSelect} />
             <RegionLayer regionProperty={regionProperty} regionLabelKey={fields.region} visible={showRegions} ranges={regionRanges} />
             {showRegions && <RegionPopup fields={fields} regionProperty={regionProperty} percentKeys={percentKeys} precision={precision} disabled={cityPopupActive} />}
-            {Array.from({ length: DATASET_COUNT }, (_, i) => i + 1).map((id) => (
-                <DatasetLayer key={id} id={id} labelProperty={cityLabelProperty} cityNameKey={fields.cityName} visible={showCities} />
+            {datasets.map((ds) => (
+                <DatasetLayer key={ds.id} id={ds.id} dataUrl={ds.dataUrl} labelProperty={cityLabelProperty} cityNameKey={fields.cityName} visible={showCities} />
             ))}
             {showCities && (
                 <>
