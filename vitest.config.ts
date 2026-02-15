@@ -7,4 +7,9 @@ export default defineConfig({
             "~": path.resolve(__dirname, "app"),
         },
     },
+    test: {
+        benchmark: {
+            include: ["**/*.bench.ts"],
+        },
+    },
 })

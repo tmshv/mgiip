@@ -10,7 +10,8 @@
         "lint": "biome check app",
         "fix": "biome check --write app",
         "format-check": "biome format app",
-        "test": "vitest run"
+        "test": "vitest run",
+        "bench": "vitest bench"
     },
     "dependencies": {
         "@turf/bbox": "^7.3.4",
