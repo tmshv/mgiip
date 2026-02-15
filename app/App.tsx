@@ -5,7 +5,7 @@ import "~/components/map-popup/styles.css"
 import "~/components/search-overlay/styles.css"
 import "~/components/header/styles.css"
 
-import { useControls } from "leva"
+import { Leva, useControls } from "leva"
 import Header from "~/components/header"
 import AppMap from "~/components/map"
 import type { DatasetMode } from "~/lib/datasets"
@@ -40,14 +40,14 @@ const regionOptions = {
 }
 
 export default function App() {
-    const { datasetMode, cityLabel, showCities, showRegions, regionParam } = useControls({
-        datasetMode: {
-            options: {
-                single: "single",
-                multi: "multi",
-            } satisfies Record<string, DatasetMode>,
-            value: "multi" as DatasetMode,
-        },
+    const { cityLabel, showCities, showRegions, regionParam } = useControls({
+        // : {
+        //     options: {
+        //         single: "single",
+        //         multi: "multi",
+        //     } satisfies Record<string, DatasetMode>,
+        //     value: "multi" as DatasetMode,
+        // },
         cityLabel: {
             options: {
                 подавался: "подавался",
@@ -63,9 +63,11 @@ export default function App() {
         },
     })
     const precision = 2
+    const datasetMode = "multi"
 
     return (
         <>
+            <Leva titleBar={{ position: { x: -10, y: 46 } }} />
             <Header />
             <div style={{ flex: 1, minHeight: 0 }}>
                 <AppMap

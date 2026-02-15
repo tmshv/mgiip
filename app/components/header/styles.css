@@ -1,4 +1,13 @@
 .header {
     background: white;
     padding: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.header-title {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 400;
 }
