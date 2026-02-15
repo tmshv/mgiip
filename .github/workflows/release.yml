@@ -1,0 +1,51 @@
+name: Release
+
+on:
+    push:
+        tags: ["v*"]
+
+jobs:
+    release:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v6
+
+            - uses: actions/setup-node@v6
+              with:
+                  node-version: 24
+
+            - uses: actions/cache@v5
+              id: npm-cache
+              with:
+                  path: node_modules
+                  key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
+
+            - if: steps.npm-cache.outputs.cache-hit != 'true'
+              run: npm ci
+
+            - name: Lint
+              run: npm run lint
+
+            - name: Test
+              run: npm run test
+
+            - name: Type Check
+              run: npm run typecheck
+
+            - name: Build
+              run: npm run build
+              env:
+                  VITE_MAPBOX_ACCESS_KEY: ${{ secrets.VITE_MAPBOX_ACCESS_KEY }}
+                  VITE_MAPBOX_STYLE: ${{ secrets.VITE_MAPBOX_STYLE }}
+
+            - name: Set version
+              run: echo "VERSION=${GITHUB_REF_NAME#v}" >> "$GITHUB_ENV"
+
+            - name: Zip dist
+              run: zip -r ${{ env.VERSION }}-mgiip.zip dist
+
+            - name: Create Release
+              uses: softprops/action-gh-release@v2
+              with:
+                  files: ${{ env.VERSION }}-mgiip.zip
