@@ -3,8 +3,10 @@ import "~/styles/index.css"
 import "~/styles/mapbox.css"
 import "~/components/map-popup/styles.css"
 import "~/components/search-overlay/styles.css"
+import "~/components/header/styles.css"
 
 import { useControls } from "leva"
+import Header from "~/components/header"
 import AppMap from "~/components/map"
 import type { DatasetMode } from "~/lib/datasets"
 import type { FieldKeys } from "~/types/fields"
@@ -63,16 +65,21 @@ export default function App() {
     const precision = 2
 
     return (
-        <AppMap
-            datasetMode={datasetMode}
-            datasetCount={DATASET_COUNT}
-            cityLabelProperty={cityLabel}
-            showCities={showCities}
-            showRegions={showRegions}
-            regionProperty={regionParam}
-            fields={fields}
-            percentKeys={percentKeys}
-            precision={precision}
-        />
+        <>
+            <Header />
+            <div style={{ flex: 1, minHeight: 0 }}>
+                <AppMap
+                    datasetMode={datasetMode}
+                    datasetCount={DATASET_COUNT}
+                    cityLabelProperty={cityLabel}
+                    showCities={showCities}
+                    showRegions={showRegions}
+                    regionProperty={regionParam}
+                    fields={fields}
+                    percentKeys={percentKeys}
+                    precision={precision}
+                />
+            </div>
+        </>
     )
 }

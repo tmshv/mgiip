@@ -40,9 +40,9 @@ const AffinumLogo: React.FC<AffinumLogoProps> = ({ color = "black" }) => {
     return (
         <div style={style}>
             {/* 8 not 10 to be plus same size as plus in logo (f takes 10px; + takes 8px)  */}
-            <LogoPlus width={8} height={8} fill={color} />
-            <div style={{ flex: 1 }} />
             <Logo width={166} height={10} fill={color} />
+            <div style={{ flex: 1 }} />
+            <LogoPlus width={8} height={8} fill={color} />
         </div>
     )
 }
