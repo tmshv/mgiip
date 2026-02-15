@@ -15,6 +15,7 @@ const style: React.CSSProperties = {
 export type RegionPopupProps = {
     fields: FieldKeys
     regionProperty: string
+    percentKeys?: Set<string>
     disabled?: boolean
 }
 
@@ -30,14 +31,17 @@ type RegionData = {
     attributes: Attribute[]
 }
 
-function formatValue(value: unknown): string {
+function formatValue(key: string, value: unknown, percentKeys?: Set<string>): string {
     if (typeof value === "number") {
+        if (percentKeys?.has(key)) {
+            return `${(value * 100).toFixed(1)}%`
+        }
         return Number.isInteger(value) ? String(value) : value.toFixed(2)
     }
     return String(value ?? "")
 }
 
-function useRegionData(properties: GeoJSON.GeoJsonProperties | null, regionProperty: string, fields: FieldKeys): RegionData | null {
+function useRegionData(properties: GeoJSON.GeoJsonProperties | null, regionProperty: string, fields: FieldKeys, percentKeys?: Set<string>): RegionData | null {
     return useMemo(() => {
         if (!properties) {
             return null
@@ -51,7 +55,7 @@ function useRegionData(properties: GeoJSON.GeoJsonProperties | null, regionPrope
             }
             attributes.push({
                 key,
-                value: formatValue(value),
+                value: formatValue(key, value, percentKeys),
                 highlight: key === regionProperty,
             })
         }
@@ -61,13 +65,13 @@ function useRegionData(properties: GeoJSON.GeoJsonProperties | null, regionPrope
             district: properties[fields.regionDistrict] ?? "",
             attributes,
         }
-    }, [properties, regionProperty, fields])
+    }, [properties, regionProperty, fields, percentKeys])
 }
 
-const RegionPopup: React.FC<RegionPopupProps> = ({ fields, regionProperty, disabled }) => {
+const RegionPopup: React.FC<RegionPopupProps> = ({ fields, regionProperty, percentKeys, disabled }) => {
     useMapPointer(REGION_LAYERS)
     const { feature, clear } = useMapHover(REGION_LAYERS, { followCursor: true })
-    const data = useRegionData(feature?.properties ?? null, regionProperty, fields)
+    const data = useRegionData(feature?.properties ?? null, regionProperty, fields, percentKeys)
 
     if (disabled || !feature || !data) {
         return null

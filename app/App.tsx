@@ -21,6 +21,8 @@ const fields: FieldKeys = {
     winRate: "доля побед",
 }
 
+const percentKeys = new Set(["доля побед", "эффективность"])
+
 const regionOptions = {
     население: "население",
     "населенных пунктов": "населенных пунктов",
@@ -47,5 +49,5 @@ export default function App() {
         },
     })
 
-    return <AppMap cityLabelProperty={cityLabel} showCities={showCities} showRegions={showRegions} regionProperty={regionParam} fields={fields} />
+    return <AppMap cityLabelProperty={cityLabel} showCities={showCities} showRegions={showRegions} regionProperty={regionParam} fields={fields} percentKeys={percentKeys} />
 }
