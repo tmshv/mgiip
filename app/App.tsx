@@ -40,14 +40,12 @@ const regionOptions = {
 }
 
 export default function App() {
-    const { city_param: cityParam, city: showCities, region: showRegions, region_param: regionParam } = useControls({
-        // : {
-        //     options: {
-        //         single: "single",
-        //         multi: "multi",
-        //     } satisfies Record<string, DatasetMode>,
-        //     value: "multi" as DatasetMode,
-        // },
+    const {
+        city_param: cityParam,
+        city: showCities,
+        region: showRegions,
+        region_param: regionParam,
+    } = useControls({
         city: true,
         city_param: {
             options: {
