@@ -8,6 +8,7 @@ import { Leva, useControls } from "leva"
 import { useCallback, useRef } from "react"
 import type { MapRef } from "react-map-gl/mapbox"
 import Header from "~/components/header"
+import type { HeatmapColorScheme } from "~/components/heatmap-layer"
 import AppMap from "~/components/map"
 import type { FieldKeys } from "~/types/fields"
 
@@ -25,6 +26,12 @@ const fields: FieldKeys = {
 }
 
 const DATASET_COUNT = 89
+
+function getHeatmapScheme(key: string): HeatmapColorScheme {
+    if (key.includes("победа")) return "green"
+    if (key.includes("подача")) return "red"
+    return "blue"
+}
 
 const percentKeys = new Set(["доля побед", "эффективность"])
 
@@ -98,6 +105,7 @@ export default function App() {
             value: "2025_победа",
         },
     })
+    const heatmapColorScheme = getHeatmapScheme(heatmapParam)
     const precision = 2
     const datasetMode = "multi"
     const mapRef = useRef<MapRef>(null)
@@ -119,6 +127,7 @@ export default function App() {
                 regionProperty={regionParam}
                 showHeatmap={showHeatmap}
                 heatmapProperty={heatmapParam}
+                heatmapColorScheme={heatmapColorScheme}
                 fields={fields}
                 percentKeys={percentKeys}
                 precision={precision}

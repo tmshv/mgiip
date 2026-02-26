@@ -7,7 +7,7 @@ import { type DatasetMode, getClusterLayerIds, getDatasets, getUnclusteredLayerI
 import type { FieldKeys } from "~/types/fields"
 import ClusterPopup from "./cluster-popup"
 import DatasetLayer from "./dataset-layer"
-import HeatmapLayer from "./heatmap-layer"
+import HeatmapLayer, { type HeatmapColorScheme } from "./heatmap-layer"
 import MapPopup from "./map-popup"
 import RegionLayer from "./region-layer"
 import RegionPopup from "./region-popup"
@@ -21,13 +21,17 @@ export type MapProps = {
     regionProperty: string
     showHeatmap: boolean
     heatmapProperty: string
+    heatmapColorScheme: HeatmapColorScheme
     fields: FieldKeys
     percentKeys: Set<string>
     precision: number
 }
 
 const AppMap = forwardRef<MapRef, MapProps>(
-    ({ datasetMode, datasetCount, cityLabelProperty, showCities, showRegions, regionProperty, showHeatmap, heatmapProperty, fields, percentKeys, precision }, ref) => {
+    (
+        { datasetMode, datasetCount, cityLabelProperty, showCities, showRegions, regionProperty, showHeatmap, heatmapProperty, heatmapColorScheme, fields, percentKeys, precision },
+        ref,
+    ) => {
         const regionRanges = useRegionRanges("/dataset-regions.geojson")
         const mapboxAccessToken = import.meta.env.VITE_MAPBOX_ACCESS_KEY
         const mapStyle = import.meta.env.VITE_MAPBOX_STYLE
@@ -95,7 +99,7 @@ const AppMap = forwardRef<MapRef, MapProps>(
             >
                 <RegionLayer regionProperty={regionProperty} regionLabelKey={fields.region} visible={showRegions} ranges={regionRanges} />
                 {showRegions && <RegionPopup fields={fields} regionProperty={regionProperty} percentKeys={percentKeys} precision={precision} disabled={cityPopupActive} />}
-                <HeatmapLayer heatmapProperty={heatmapProperty} visible={showHeatmap} />
+                <HeatmapLayer heatmapProperty={heatmapProperty} colorScheme={heatmapColorScheme} visible={showHeatmap} />
                 {datasets.map((ds) => (
                     <DatasetLayer key={ds.id} id={ds.id} dataUrl={ds.dataUrl} labelProperty={cityLabelProperty} cityNameKey={fields.cityName} visible={showCities} />
                 ))}
