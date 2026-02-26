@@ -28,6 +28,29 @@ const DATASET_COUNT = 89
 
 const percentKeys = new Set(["доля побед", "эффективность"])
 
+const heatmapOptions = {
+    "2018_подача": "2018_подача",
+    "2018_победа": "2018_победа",
+    "2019_подача": "2019_подача",
+    "2019_победа": "2019_победа",
+    "2020_1_подача": "2020_1_подача",
+    "2020_1_победа": "2020_1_победа",
+    "2020_2_подача": "2020_2_подача",
+    "2020_2_победа": "2020_2_победа",
+    "2021_подача": "2021_подача",
+    "2021_победа": "2021_победа",
+    "2022_1_подача": "2022_1_подача",
+    "2022_1_победа": "2022_1_победа",
+    "2022_2_подача": "2022_2_подача",
+    "2022_2_победа": "2022_2_победа",
+    "2023_подача": "2023_подача",
+    "2023_победа": "2023_победа",
+    "2024_подача": "2024_подача",
+    "2024_победа": "2024_победа",
+    "2025_подача": "2025_подача",
+    "2025_победа": "2025_победа",
+}
+
 const regionOptions = {
     население: "население",
     "населенных пунктов": "населенных пунктов",
@@ -45,6 +68,8 @@ export default function App() {
         city: showCities,
         region: showRegions,
         region_param: regionParam,
+        heatmap: showHeatmap,
+        heatmap_param: heatmapParam,
     } = useControls({
         city: true,
         city_param: {
@@ -58,6 +83,11 @@ export default function App() {
         region_param: {
             options: regionOptions,
             value: "победители",
+        },
+        heatmap: false,
+        heatmap_param: {
+            options: heatmapOptions,
+            value: "2025_победа",
         },
     })
     const precision = 2
@@ -79,6 +109,8 @@ export default function App() {
                 showCities={showCities}
                 showRegions={showRegions}
                 regionProperty={regionParam}
+                showHeatmap={showHeatmap}
+                heatmapProperty={heatmapParam}
                 fields={fields}
                 percentKeys={percentKeys}
                 precision={precision}
