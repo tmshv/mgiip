@@ -8,6 +8,7 @@ import { Leva, useControls } from "leva"
 import { useCallback, useRef } from "react"
 import type { MapRef } from "react-map-gl/mapbox"
 import Header from "~/components/header"
+import type { HeatmapColorScheme } from "~/components/heatmap-layer"
 import AppMap from "~/components/map"
 import type { FieldKeys } from "~/types/fields"
 
@@ -26,7 +27,44 @@ const fields: FieldKeys = {
 
 const DATASET_COUNT = 89
 
+function getHeatmapScheme(key: string): HeatmapColorScheme {
+    if (key.includes("победа")) return "green"
+    if (key.includes("подача")) return "red"
+    return "blue"
+}
+
 const percentKeys = new Set(["доля побед", "эффективность"])
+
+const heatmapOptions = {
+    "2018_подача": "2018_подача",
+    "2018_победа": "2018_победа",
+    "2019_подача": "2019_подача",
+    "2019_победа": "2019_победа",
+    "2020_1_подача": "2020_1_подача",
+    "2020_1_победа": "2020_1_победа",
+    "2020_2_подача": "2020_2_подача",
+    "2020_2_победа": "2020_2_победа",
+    "2021_подача": "2021_подача",
+    "2021_победа": "2021_победа",
+    "2022_1_подача": "2022_1_подача",
+    "2022_1_победа": "2022_1_победа",
+    "2022_2_подача": "2022_2_подача",
+    "2022_2_победа": "2022_2_победа",
+    "2023_подача": "2023_подача",
+    "2023_победа": "2023_победа",
+    "2024_подача": "2024_подача",
+    "2024_победа": "2024_победа",
+    "2025_подача": "2025_подача",
+    "2025_победа": "2025_победа",
+    дфо1_подача: "дфо1_подача",
+    дфо1_победа: "дфо1_победа",
+    дфо2_подача: "дфо2_подача",
+    дфо2_победа: "дфо2_победа",
+    дфо3_подача: "дфо3_подача",
+    дфо3_победа: "дфо3_победа",
+    дфо4_подача: "дфо4_подача",
+    дфо4_победа: "дфо4_победа",
+}
 
 const regionOptions = {
     население: "население",
@@ -45,6 +83,8 @@ export default function App() {
         city: showCities,
         region: showRegions,
         region_param: regionParam,
+        heatmap: showHeatmap,
+        heatmap_param: heatmapParam,
     } = useControls({
         city: true,
         city_param: {
@@ -59,7 +99,13 @@ export default function App() {
             options: regionOptions,
             value: "победители",
         },
+        heatmap: false,
+        heatmap_param: {
+            options: heatmapOptions,
+            value: "2025_победа",
+        },
     })
+    const heatmapColorScheme = getHeatmapScheme(heatmapParam)
     const precision = 2
     const datasetMode = "multi"
     const mapRef = useRef<MapRef>(null)
@@ -79,6 +125,9 @@ export default function App() {
                 showCities={showCities}
                 showRegions={showRegions}
                 regionProperty={regionParam}
+                showHeatmap={showHeatmap}
+                heatmapProperty={heatmapParam}
+                heatmapColorScheme={heatmapColorScheme}
                 fields={fields}
                 percentKeys={percentKeys}
                 precision={precision}
